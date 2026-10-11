@@ -19,8 +19,4 @@ Open the local address shown in the terminal. To check TypeScript and create a p
 - `src/components/PetCard.tsx`: one pet preview, reused for each sample pet.
 - `src/data/pets.ts`: sample pets; these are not database records.
 - `src/styles.css`: colors, spacing, and responsive layouts.
-- `public/adoptail-logo.svg`: the supplied logo with a tighter viewing area.
-
-This first version is a landing page only. Navigation links move to sections on the page. Authentication, pet browsing, applications, and the backend connection will be added separately.
-
-The landing page uses the team's logo and text-only sample pet previews. There are no animal photos in this version.
+- `public/adoptail-logo.svg`: the logo.
