@@ -4,9 +4,9 @@ import PetCard from './components/PetCard';
 import { pets } from './data/pets';
 
 const adoptionSteps = [
-  { icon: PawPrint, title: 'Find a pet', text: 'Find a companion who fits your life.' },
-  { icon: ClipboardList, title: 'Apply', text: 'Tell the shelter a little about yourself.' },
-  { icon: House, title: 'Meet your companion', text: 'Arrange a visit with the shelter.' },
+  { icon: PawPrint, title: 'Find a pet', text: 'Find a companion who fits your life.', buttonText: 'Find Pets', href: '/Find_a_Pet.html', },
+  { icon: ClipboardList, title: 'Apply', text: 'Tell the shelter a little about yourself.', buttonText: 'Adopt Pets', href: '/Adopt_a_Pet.html', },
+  { icon: House, title: 'Meet your companion', text: 'Arrange a visit with the shelter.', buttonText: 'Schedule Visit', href: '/Schedule_a_Visit.html' },
 ];
 
 export default function App() {
@@ -44,6 +44,8 @@ export default function App() {
                   <div className="step-top"><step.icon size={26} aria-hidden="true" /><span>0{index + 1}</span></div>
                   <h3>{step.title}</h3>
                   <p>{step.text}</p>
+                  <a className="button button-small" href={step.href}> {step.buttonText} <ArrowRight size={19} aria-hidden="true" />
+                  </a>
                 </article>
               ))}
             </div>
