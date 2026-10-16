@@ -3,21 +3,26 @@ import Header from './components/Header';
 import PetCard from './components/PetCard';
 import { pets } from './data/pets';
 
-const adoptionSteps = [
-  { icon: PawPrint, title: 'Find a pet', text: 'Find a companion who fits your life.' },
-  { icon: ClipboardList, title: 'Apply', text: 'Tell the shelter a little about yourself.' },
-  { icon: House, title: 'Meet your companion', text: 'Arrange a visit with the shelter.' },
-];
+import { useState } from 'react';
 
 export default function AdoptAPet() {
-  return (
-    <main>
-      <a className="skip-link" href="#main">Skip to content</a>
+  const [search, setSearch] = useState (' ');
+  const filteredPets = pets.filter((pet) => `${pet.name} ${pet.details}`.toLowerCase().includes(search.trim().toLowerCase()));
+
+   return (
+    <>
       <Header />
       <main id="main">
-        <h1> Adopt a Pet</h1>
-        {/* Adopt a Pet */}
-    </main>
-    </main>
+        <section id="Application" className="application window" aria-labelledby="application-title">
+          <div className="section-heading" style={{ display: 'flex', alignItems: 'center', gap: '0.9rem' }}>
+            <h1 id="application-title">Adopt a Pet</h1>
+          </div>
+          <input id="search" type="search" value={search} onChange={(event) => setSearch(event.target.value)}
+          placeholder="Search" />
+          {filteredPets.map((pet) => (<PetCard key={pet.id} pet={pet}/>))}
+        </section>
+      </main>
+    </>
   );
 }
+
