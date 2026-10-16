@@ -126,7 +126,7 @@ values
   (
     '30000000-0000-4000-8000-000000000006',
     '10000000-0000-4000-8000-000000000005',
-    'surgury', '2025-05-23',
+    'treatment', '2025-05-23',
     'Wound repair',
     'Had a wound on hind leg and received surgury to aid in healing.',
     true
