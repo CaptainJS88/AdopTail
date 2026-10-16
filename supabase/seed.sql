@@ -1,29 +1,134 @@
-<!DOCTYPE html><html lang="en" data-dpl-id="dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr"><head><meta charSet="utf-8" data-next-head=""/><meta name="viewport" content="initial-scale=1.0, width=device-width" data-next-head=""/><title data-next-head="">Supabase</title><meta property="og:image" content="/dashboard/img/supabase-og.png" data-next-head=""/><meta name="googlebot" content="notranslate" data-next-head=""/><link rel="preconnect" href="https://api.supabase.com" crossorigin="use-credentials" data-next-head=""/><meta name="application-name" content="Supabase Studio" data-next-head=""/><meta name="theme-color" content="#1E1E1E" data-next-head=""/><link rel="icon" type="image/x-icon" sizes="16x16 32x32 48x48" href="/dashboard/favicon/favicon.ico" data-next-head=""/><link rel="apple-touch-icon" type="image/png" sizes="180x180" href="/dashboard/favicon/apple-icon-180x180.png" data-next-head=""/><link rel="manifest" href="/dashboard/favicon/manifest.json" data-next-head=""/><link rel="preload" href="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/media/a343f882a40d2cc9-s.p.3259ncl47-hqj.woff2?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" as="font" type="font/woff2" crossorigin="anonymous" data-next-font="size-adjust"/><link rel="preload" href="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/media/InterVariable-s.p.0rpdhg_4ubdtf.woff2?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" as="font" type="font/woff2" crossorigin="anonymous" data-next-font="size-adjust"/><link rel="preload" href="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/media/InterVariable_Italic-s.p.0xt9vn2smuhza.woff2?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" as="font" type="font/woff2" crossorigin="anonymous" data-next-font="size-adjust"/><link rel="preload" href="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/media/SourceCodePro_Variable-s.p.1knezq04g4imf.woff2?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" as="font" type="font/woff2" crossorigin="anonymous" data-next-font="size-adjust"/><link rel="preload" href="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/media/SourceCodePro_Variable_Italic-s.p.01a3jr3av0knn.woff2?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" as="font" type="font/woff2" crossorigin="anonymous" data-next-font="size-adjust"/><link rel="preload" href="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/270i7csp05bw9.css?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" as="style"/><link rel="preload" href="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/42n4921bmw74d.css?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" as="style"/><link rel="preload" href="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/0olbcv6p7n43k.css?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" as="style"/><link rel="preload" href="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/1vst-pxu8d470.css?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" as="style"/><style data-next-head="">:root{--font-sans:'inter', 'inter Fallback', system-ui, Helvetica Neue, Helvetica, Arial, sans-serif;--font-heading:'Manrope', 'Manrope Fallback';--font-source-code-pro:'sourceCodePro', 'sourceCodePro Fallback', Source Code Pro, Office Code Pro, Menlo, monospace;}</style><link rel="stylesheet" href="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/270i7csp05bw9.css?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" data-n-g=""/><link rel="stylesheet" href="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/42n4921bmw74d.css?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" data-n-g=""/><link rel="stylesheet" href="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/0olbcv6p7n43k.css?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" data-n-g=""/><link rel="stylesheet" href="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/1vst-pxu8d470.css?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" data-n-p=""/><noscript data-n-css=""></noscript><script defer="" noModule="" src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/0c0hxoamwjsbw.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr"></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/0uo7b98-wmuy6.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/3yut-htp54myg.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/3uniomscqu0tv.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/37zx22xp9wy37.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/1cflzg8bzysd1.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/0t83n9f79_x8s.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/2s66ldzgl-_1a.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/2tarmz8a6vppi.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/35w2pjbd_4gav.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/1y7yny23sl2ty.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/2ozllw8k7yeo7.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/2lxw41inu29bo.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/0z3k67twskbm5.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/0jzvpx_j9n7vk.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/00xhf80h8er9i.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/44pqo0_b5_hsp.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/0mpgvb6ati55u.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/324go7hmg7hut.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/1z574b23wwtv8.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/2q-m1z4fx-3ll.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/1tk5ktwvl41kc.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/2cquqkwcyrlxl.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/0tesss3_anffm.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/09ojtz4jgo-4i.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/3d30tdlp1ld0-.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/0-xasuzs9tgah.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/0dbz7l-swi8a4.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/1ozyr48cx3_q8.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/2slzc88ilq85z.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/0a7yqok6e0o8x.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/0c0ncc59z2e35.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/turbopack-0wjhw777b5_se.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/0-x8qo_4iec20.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/0kxld6rmk1m8u.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/0tbn7qwotf-x9.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/04q4f_mp4eu3n.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/10lgs0ujmyxr2.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/0gjwtogidqggf.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/2psjhl2u2axf1.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/3ibgce3q0avjl.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/0j53ckvb5ci5u.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/0fay0lqpt54lv.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/0mmo6tb0xqm-q.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/2q0gc019ou79c.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/1by3l1ssw4x-f.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/09zcpgpokelc1.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/2furocnkr5j9w.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/39865290-7_de.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/08ri92acnot6-.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/0vnewwxtmpwpn.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/08g9z38xqxu_p.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/0o-5s460ysg3y.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/0vmfjwo0-1iut.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/14pg7fcspq96_.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/2qwz5jnzswbis.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/0au_0s12la4b5.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/1bvy3aqv_7kmv.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/1tsy9e7qgddv6.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/2m9sce4-ez4ts.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/0w3vafhum3lr_.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/3efn_w6zfpe_2.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/3s4bs_jdt22se.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/23szaa8rsby82.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/3g_nz-vuxzfjw.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/3b1_a1zhq5-mf.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/1i72hq85_fk1p.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/2lf6k4gme5ixb.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/chunks/turbopack-09qri1ncyi25r.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/build-TfctsWXpff2fKS/_buildManifest.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/build-TfctsWXpff2fKS/_ssgManifest.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script><script src="https://frontend-assets.supabase.com/studio/b8eca2e1c974/_next/static/build-TfctsWXpff2fKS/_clientMiddlewareManifest.js?dpl=dpl_5GzNMMkT6SuAvjxEGJcmWGw96Fhr" defer=""></script></head><body class="inter_ea19471e-module__hEm59a__variable manrope_bc374578-module__VIULEG__variable sourcecodepro_4ffffd37-module__yJc_Hq__variable"><style>
-        #studio-boot-fallback {
-          position: fixed;
-          inset: 0;
-          z-index: 9999;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 24px;
-          background: #1c1c1c;
-          pointer-events: none;
-          visibility: hidden;
-          opacity: 0;
-          animation: studio-boot-fallback-reveal 0.3s ease-out 7s forwards;
-        }
-        #studio-boot-fallback p {
-          color: #fff;
-          font-family: sans-serif;
-          font-size: 14px;
-          text-align: center;
-        }
-        @keyframes studio-boot-fallback-reveal {
-          to {
-            visibility: visible;
-            opacity: 1;
-            pointer-events: auto;
-          }
-        }
-      </style><div id="studio-boot-fallback"><p>Taking longer than expected? Try clearing your browser cookies and reloading the page.<!-- --> <!-- -->If the problem persists, contact<!-- --> <a href="mailto:support@supabase.io">support@supabase.io</a>.</p></div><div id="__next"><script type="application/json" data-flag-values="true">{}</script><script>((e,i,s,u,m,a,l,h)=>{let d=document.documentElement,w=["light","dark"];function p(n){(Array.isArray(e)?e:[e]).forEach(y=>{let k=y==="class",S=k&&a?m.map(f=>a[f]||f):m;k?(d.classList.remove(...S),d.classList.add(a&&a[n]?a[n]:n)):d.setAttribute(y,n)}),R(n)}function R(n){h&&w.includes(n)&&(d.style.colorScheme=n)}function c(){return window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}if(u)p(u);else try{let n=localStorage.getItem(i)||s,y=l&&n==="system"?c():n;p(y)}catch(n){}})("data-theme","theme","system",null,["dark","light"],{"dark":"dark","light":"light","classic-dark":"dark"},true,true)</script><div class="h-full min-h-0 basis-0 flex-1"></div></div><script id="__NEXT_DATA__" type="application/json">{"props":{"pageProps":{}},"page":"/organizations","query":{},"buildId":"build-TfctsWXpff2fKS","assetPrefix":"https://frontend-assets.supabase.com/studio/b8eca2e1c974","nextExport":true,"autoExport":true,"isFallback":false,"scriptLoader":[]}</script></body></html>
+--inserting animals in shelter 
+insert into public.animals (
+  id, name, species, breed, age_months, description, care_needs
+)
+values
+  (
+    '10000000-0000-4000-8000-000000000001',
+    'Maple', 'Dog', 'Golden Retriever', 18,
+    'Friendly and enjoys walks.',
+    'Daily exercise and regular brushing.'
+  ),
+  (
+    '10000000-0000-4000-8000-000000000002',
+    'Juniper', 'Cat', 'Domestic Shorthair', 30,
+    'Calm adult cat who likes sunny windows.',
+    'Indoor home and daily play.'
+  ),
+  (
+    '10000000-0000-4000-8000-000000000003',
+    'Joe', 'Dog', 'Chiquaqua', 7,
+    'Excited puppy who loves treats and belly rubs.',
+    'Outdoor exposure and social settings.'
+  ),
+  (
+    '10000000-0000-4000-8000-000000000004',
+    'Catrina', 'Cat', 'Orange Tabby', 12,
+    'Sassy adult cat.',
+    'Indoor home and allergy prone.'
+  ),
+  (
+    '10000000-0000-4000-8000-000000000005',
+    'Spot', 'Dog', 'Dalmation', 45,
+    'Calm elderly dog that loves naps.',
+    'Daily exercise and extra nutrition.'
+  )
+on conflict (id) do nothing;
+
+--associated photos
+insert into public.animal_photos (
+  id, animal_id, photo_url, alt_text, display_order
+)
+values
+  (
+    '20000000-0000-4000-8000-000000000001',
+    '10000000-0000-4000-8000-000000000001',
+    'https://storage.dogster.com/_cache/v1/01aed617e5f4bc10417d686e62ce34b11458f465.jpeg',
+    'Maple frolicing outdoors',
+    0
+  ),
+  (
+    '20000000-0000-4000-8000-000000000002',
+    '10000000-0000-4000-8000-000000000002',
+    'https://d3544la1u8djza.cloudfront.net/APHI/Blog/2022/02-11/orange+domestic+shorthair+tabby+cat+lying+on+carpet+next+to+a+Christmas+tree-min.jpg',
+    'Juniper gazing into the distance',
+    0
+  ),
+  (
+    '20000000-0000-4000-8000-000000000003',
+    '10000000-0000-4000-8000-000000000003',
+    'https://www.adoptapet.com/_next/image?url=https%3A%2F%2Fimages.ctfassets.net%2Fscac5p2hkp4h%2Fdeibo9dVjl1e8Ozy3X91L%2F1582315f1065d9b85e5df0ac8d48493e%2Faap-inline-chihuauha-2-play.webp&w=2048&q=75$0',
+    'Joe playing with his toys...and some socks',
+    0
+  ),
+  (
+    '20000000-0000-4000-8000-000000000004',
+    '10000000-0000-4000-8000-000000000004',
+    'hhttps://images.petful.com/posts/orange-tabby-cat/orange-tabby-personality.webp',
+    'Catrina demanding pets',
+    0
+  ),
+  (
+    '20000000-0000-4000-8000-000000000005',
+    '10000000-0000-4000-8000-000000000005',
+    'https://www.shutterstock.com/shutterstock/videos/1021813000/thumb/1.jpg?ip=x480',
+    'Spot resting indoors',
+    0
+  )
+
+on conflict (id) do nothing;
+
+--associated medical records
+insert into public.medical_records (
+  id, animal_id, record_type, record_date, summary, details, adopter_visible
+)
+values
+  (
+    '30000000-0000-4000-8000-000000000001',
+    '10000000-0000-4000-8000-000000000001',
+    'vaccination', '2026-09-20',
+    'Core vaccinations up to date',
+    'Routine shelter wellness visit.',
+    true
+  ),
+  (
+    '30000000-0000-4000-8000-000000000002',
+    '10000000-0000-4000-8000-000000000002',
+    'medication', '2026-08-07',
+    'Heartworm medication, no reoccurance since',
+    'Needs follow up blood test until June.',
+    true
+  ),
+  (
+    '30000000-0000-4000-8000-000000000003',
+    '10000000-0000-4000-8000-000000000002',
+    'vaccination', '2026-10-01',
+    'Core vaccinations up to date',
+    'Routine shelter wellness visit.',
+    true
+  ),
+  (
+    '30000000-0000-4000-8000-000000000004',
+    '10000000-0000-4000-8000-000000000003',
+    'vaccination', '2026-02-23',
+    'Core vaccinations up to date',
+    'Routine shelter wellness visit.',
+    true
+  ),
+  (
+    '30000000-0000-4000-8000-000000000005',
+    '10000000-0000-4000-8000-000000000004',
+    'vaccination', '2026-09-20',
+    'Core vaccinations up to date',
+    'Routine shelter wellness visit.',
+    true
+  ),
+  (
+    '30000000-0000-4000-8000-000000000006',
+    '10000000-0000-4000-8000-000000000005',
+    'surgury', '2025-05-23',
+    'Wound repair',
+    'Had a wound on hind leg and received surgury to aid in healing.',
+    true
+  )
+on conflict (id) do nothing;
