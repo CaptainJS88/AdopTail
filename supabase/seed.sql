@@ -1,0 +1,2 @@
+-- Local dummy data goes here. Seed data runs after migrations during
+-- `npx supabase db reset`. Do not add real user accounts or workflow records.
