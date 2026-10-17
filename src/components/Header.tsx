@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { ArrowUpRight, Menu, X } from 'lucide-react';
 
 export default function Header() {
@@ -7,9 +8,9 @@ export default function Header() {
   return (
     <header className="site-header">
       <div className="container header-content">
-        <a className="brand" href="#home" aria-label="Adoptail home">
+        <Link className="brand" to="/" aria-label="Adoptail home">
           <img src="/adoptail-logo.svg" alt="Adoptail" />
-        </a>
+        </Link>
         <button
           className="menu-button"
           type="button"
@@ -21,12 +22,12 @@ export default function Header() {
           {menuOpen ? <X /> : <Menu />}
         </button>
         <nav id="main-navigation" className={menuOpen ? 'navigation open' : 'navigation'} aria-label="Main navigation">
-          <a href="#pets" onClick={() => setMenuOpen(false)}>Meet the pets</a>
-          <a href="#how-it-works" onClick={() => setMenuOpen(false)}>How adoption works</a>
-          <a href="#about" onClick={() => setMenuOpen(false)}>About us</a>
-          <a className="button button-small" href="#pets" onClick={() => setMenuOpen(false)}>
+          <a href="/#pets" onClick={() => setMenuOpen(false)}>Meet the pets</a>
+          <a href="/#how-it-works" onClick={() => setMenuOpen(false)}>How adoption works</a>
+          <a href="/#about" onClick={() => setMenuOpen(false)}>About us</a>
+          <Link className="button button-small" to="/pets" onClick={() => setMenuOpen(false)}>
             Find a pet <ArrowUpRight size={17} aria-hidden="true" />
-          </a>
+          </Link>
         </nav>
       </div>
     </header>
