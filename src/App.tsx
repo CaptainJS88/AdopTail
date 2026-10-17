@@ -1,68 +1,38 @@
-import { ArrowRight, PawPrint, ClipboardList, House } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Route, Routes, useLocation } from 'react-router-dom';
+import type { ApplicationDraft } from './types';
 import Header from './components/Header';
-import PetCard from './components/PetCard';
-import { pets } from './data/pets';
-
-const adoptionSteps = [
-  { icon: PawPrint, title: 'Find a pet', text: 'Find a companion who fits your life.', buttonText: 'Find Pets', href: '/Find_a_Pet.html', },
-  { icon: ClipboardList, title: 'Apply', text: 'Tell the shelter a little about yourself.', buttonText: 'Adopt Pets', href: '/Adopt_a_Pet.html', },
-  { icon: House, title: 'Meet your companion', text: 'Arrange a visit with the shelter.', buttonText: 'Schedule Visit', href: '/Schedule_a_Visit.html' },
-];
+import Home from './pages/Home';
+import FindPet from './pages/FindPet';
+import AdoptPet from './pages/AdoptPet';
+import ScheduleVisit from './pages/ScheduleVisit';
 
 export default function App() {
+  const [application, setApplication] = useState<ApplicationDraft | null>(null);
+  const { pathname, hash } = useLocation();
+
+  useEffect(() => {
+    // go to the section if the link has one, otherwise start at the top
+    if (hash) {
+      document.getElementById(hash.slice(1))?.scrollIntoView();
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, [pathname, hash]);
+
   return (
     <>
       <a className="skip-link" href="#main">Skip to content</a>
       <Header />
       <main id="main">
-        <section id="home" className="hero" aria-labelledby="hero-title">
-          <div className="container hero-content">
-            <h1 id="hero-title">Adoptail</h1>
-            <p className="hero-description">Find a friend. Give them a home.</p>
-            <a className="button" href="#pets">Find a pet <ArrowRight size={19} aria-hidden="true" /></a>
-          </div>
-        </section>
-
-        <section id="pets" className="section container" aria-labelledby="pets-title">
-          <div className="section-heading">
-            <div>
-              <h2 id="pets-title">Meet the pets</h2>
-            </div>
-            <span className="sample-label">Sample pet profiles</span>
-          </div>
-          <div className="pet-grid">
-            {pets.map((pet) => <PetCard key={pet.id} pet={pet} />)}
-          </div>
-        </section>
-
-        <section id="how-it-works" className="steps-section" aria-labelledby="steps-title">
-          <div className="container section">
-            <h2 id="steps-title">How adoption works</h2>
-            <div className="steps-grid">
-              {adoptionSteps.map((step, index) => (
-                <article className="adoption-step" key={step.title}>
-                  <div className="step-top"><step.icon size={26} aria-hidden="true" /><span>0{index + 1}</span></div>
-                  <h3>{step.title}</h3>
-                  <p>{step.text}</p>
-                  <a className="button button-small" href={step.href}> {step.buttonText} <ArrowRight size={19} aria-hidden="true" />
-                  </a>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section id="about" className="container about-section" aria-labelledby="about-title">
-          <h2 id="about-title">About Adoptail</h2>
-          <p>Connecting shelter pets with a place to call home.</p>
-        </section>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/pets" element={<FindPet />} />
+          <Route path="/adopt" element={<AdoptPet application={application} onContinue={setApplication} />} />
+          <Route path="/visit" element={<ScheduleVisit application={application} />} />
+          <Route path="*" element={<section className="section container"><h1>Page not found</h1></section>} />
+        </Routes>
       </main>
-      <footer className="site-footer">
-        <div className="container footer-content">
-          <a className="brand" href="#home" aria-label="Adoptail home"><img src="/adoptail-logo.svg" alt="Adoptail" /></a>
-          <a href="#home">Back to top <ArrowRight size={16} aria-hidden="true" /></a>
-        </div>
-      </footer>
     </>
   );
 }
