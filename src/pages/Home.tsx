@@ -1,7 +1,8 @@
 import { ArrowRight, PawPrint, ClipboardList, House } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import PetCard from '../components/PetCard';
-import { pets } from '../data/pets';
+import PetLoadState from '../components/PetLoadState';
+import { usePets } from '../hooks/usePets';
 
 const adoptionSteps = [
   { icon: PawPrint, title: 'Find a pet', text: 'Find a companion who fits your life.' },
@@ -10,6 +11,8 @@ const adoptionSteps = [
 ];
 
 export default function Home() {
+  const { pets, loading, error } = usePets();
+
   return (
     <>
       <section id="home" className="hero" aria-labelledby="hero-title">
@@ -22,14 +25,16 @@ export default function Home() {
 
       <section id="pets" className="section container" aria-labelledby="pets-title">
         <div className="section-heading">
-          <div>
-            <h2 id="pets-title">Meet the pets</h2>
+          <div><h2 id="pets-title">Meet the pets</h2></div>
+          <span className="sample-label">Shelter listings</span>
+        </div>
+        <PetLoadState loading={loading} error={error} />
+        {!loading && !error && pets.length === 0 && <p>No animal listings are available right now.</p>}
+        {!loading && !error && (
+          <div className="pet-grid">
+            {pets.slice(0, 3).map((pet) => <PetCard key={pet.id} pet={pet} />)}
           </div>
-          <span className="sample-label">Sample pet profiles</span>
-        </div>
-        <div className="pet-grid">
-          {pets.map((pet) => <PetCard key={pet.id} pet={pet} />)}
-        </div>
+        )}
       </section>
 
       <section id="how-it-works" className="steps-section" aria-labelledby="steps-title">
