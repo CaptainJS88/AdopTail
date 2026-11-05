@@ -23,12 +23,14 @@ type AnimalRow = {
   adoption_status: string;
 };
 
-function formatAge(ageMonths: number | null) {
+export function formatAge(ageMonths: number | null) {
   if (ageMonths === null) return null;
   if (ageMonths < 12) return `${ageMonths} months`;
   const years = Math.floor(ageMonths / 12);
   const months = ageMonths % 12;
-  return months === 0 ? `${years} ${years === 1 ? 'year' : 'years'}` : `${years}y ${months}m`;
+  return months === 0
+    ? `${years} ${years === 1 ? 'year' : 'years'}`
+    : `${years}y ${months}m`;
 }
 
 function mapAnimal(row: AnimalRow): Pet {
@@ -52,10 +54,34 @@ function mapAnimal(row: AnimalRow): Pet {
 export async function getPets(): Promise<Pet[]> {
   const { data, error } = await supabase
     .from('animals')
-    .select('id, name, species, breed, age_months, description, care_needs, adoption_status')
+    .select(
+      'id, name, species, breed, age_months, description, care_needs, adoption_status',
+    )
     .eq('listing_visible', true)
     .order('name');
 
   if (error) throw error;
   return (data as AnimalRow[]).map(mapAnimal);
+}
+
+export interface MedicalRecord {
+  id: string;
+  record_type: string;
+  record_date: string;
+  summary: string;
+  details: string;
+}
+
+export async function getMedicalRecords(
+  petId: string,
+): Promise<MedicalRecord[]> {
+  const { data, error } = await supabase
+    .from('medical_records')
+    .select('id, record_type, record_date, summary, details')
+    .eq('animal_id', petId)
+    .eq('adopter_visible', true)
+    .order('record_date', { ascending: false });
+
+  if (error) throw error;
+  return data ?? [];
 }

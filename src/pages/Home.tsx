@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import PetCard from '../components/PetCard';
 import PetLoadState from '../components/PetLoadState';
 import { usePets } from '../hooks/usePets';
+import Message from '../components/Message';
 
 const adoptionSteps = [
   { icon: PawPrint, title: 'Find a pet', text: 'Find a companion who fits your life.' },
@@ -29,7 +30,7 @@ export default function Home() {
           <span className="sample-label">Shelter listings</span>
         </div>
         <PetLoadState loading={loading} error={error} />
-        {!loading && !error && pets.length === 0 && <p>No animal listings are available right now.</p>}
+        {!loading && !error && pets.length === 0 && <Message>No pets are listed right now. Please check back soon.</Message>}
         {!loading && !error && (
           <div className="pet-grid">
             {pets.slice(0, 3).map((pet) => <PetCard key={pet.id} pet={pet} />)}

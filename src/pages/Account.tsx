@@ -3,6 +3,9 @@ import type { FormEvent } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../auth/AuthContext';
+import { ArrowRight, LogOut, UserRound } from 'lucide-react';
+import Message from '../components/Message';
+import { requestError } from '../lib/messages';
 
 export default function Account() {
   const { session, loading, signOut } = useAuth();
@@ -13,7 +16,8 @@ export default function Account() {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const next = searchParams.get('next') || '/pets';
-  const destination = next.startsWith('/') && !next.startsWith('//') ? next : '/pets';
+  const destination =
+    next.startsWith('/') && !next.startsWith('//') ? next : '/pets';
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -36,21 +40,33 @@ export default function Account() {
         });
         if (authError) throw authError;
         if (data.session && data.user) {
-          const { error: profileError } = await supabase.from('profiles')
-            .update({ display_name: displayName }).eq('id', data.user.id);
+          const { error: profileError } = await supabase
+            .from('profiles')
+            .update({ display_name: displayName })
+            .eq('id', data.user.id);
           if (profileError) throw profileError;
           navigate(destination);
         } else {
-          setMessage('Account created. Check your email to confirm the account, then sign in.');
+          setMessage(
+            'Account created. Check your email to confirm the account, then sign in.',
+          );
           setMode('signin');
         }
       } else {
-        const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
+        const { error: authError } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
         if (authError) throw authError;
         navigate(destination);
       }
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : 'Account request failed.');
+      setError(
+        requestError(
+          cause,
+          'We could not complete your account request. Please try again.',
+        ),
+      );
     } finally {
       setBusy(false);
     }
@@ -58,42 +74,151 @@ export default function Account() {
 
   async function handleSignOut() {
     setError('');
-    try { await signOut(); }
-    catch (cause) { setError(cause instanceof Error ? cause.message : 'Could not sign out.'); }
+    setBusy(true);
+    try {
+      await signOut();
+      setMessage('You have been signed out.');
+    } catch (cause) {
+      setError(
+        requestError(cause, 'We could not sign you out. Please try again.'),
+      );
+    } finally {
+      setBusy(false);
+    }
   }
 
-  if (loading) return <section className="section container"><p role="status">Checking your session…</p></section>;
+  if (loading)
+    return (
+      <section className="section container">
+        <Message kind="loading">Checking your session...</Message>
+      </section>
+    );
 
   if (session) {
     return (
       <section className="section container" aria-labelledby="account-title">
-        <h1 id="account-title">Your account</h1>
-        <p>Signed in as {session.user.email}</p>
-        {error && <p role="alert">{error}</p>}
-        <p><Link to="/applications">View your applications</Link></p>
-        <button className="button" type="button" onClick={handleSignOut}>Sign out</button>
+        <div className="page-content">
+          <div className="page-heading">
+            <h1 id="account-title">Your account</h1>
+            <p>Manage your adoption journey.</p>
+          </div>
+          {error && <Message kind="error">{error}</Message>}
+          <div className="account-details">
+            <UserRound size={24} aria-hidden="true" />
+            <div>
+              <p className="detail-label">Signed in as</p>
+              <p className="account-email">{session.user.email}</p>
+            </div>
+          </div>
+          <div className="account-section">
+            <h2>Your applications</h2>
+            <p>View your submitted applications and their latest status.</p>
+            <Link className="text-link" to="/applications">
+              View applications <ArrowRight size={17} aria-hidden="true" />
+            </Link>
+          </div>
+          <div className="account-actions">
+            <Link className="button button-small" to="/pets">
+              Find a pet <ArrowRight size={17} aria-hidden="true" />
+            </Link>
+            <button
+              className="button button-secondary button-small"
+              type="button"
+              disabled={busy}
+              onClick={handleSignOut}
+            >
+              <LogOut size={16} aria-hidden="true" />
+              {busy ? 'Signing out...' : 'Sign out'}
+            </button>
+          </div>
+        </div>
       </section>
     );
   }
 
   return (
     <section className="section container" aria-labelledby="account-title">
-      <h1 id="account-title">{mode === 'signup' ? 'Create adopter account' : 'Sign in'}</h1>
-      <p className="hero-description">An adopter account is required to submit applications and visit requests.</p>
-      {message && <p role="status">{message}</p>}
-      {error && <p role="alert">{error}</p>}
-      <form onSubmit={handleSubmit}>
-        {mode === 'signup' && <div className="field"><label htmlFor="displayName">Full name</label><input id="displayName" name="displayName" autoComplete="name" required maxLength={100} /></div>}
-        <div className="field"><label htmlFor="email">Email</label><input id="email" name="email" type="email" autoComplete="email" required maxLength={254} /></div>
-        <div className="field"><label htmlFor="password">Password</label><input id="password" name="password" type="password" autoComplete={mode === 'signup' ? 'new-password' : 'current-password'} required minLength={8} /></div>
-        <button className="button" type="submit" disabled={busy}>{busy ? 'Please wait…' : mode === 'signup' ? 'Create account' : 'Sign in'}</button>
-      </form>
-      <p className="hero-description">
-        {mode === 'signup' ? 'Already have an account? ' : 'New to Adoptail? '}
-        <button type="button" className="text-button" onClick={() => { setMode(mode === 'signup' ? 'signin' : 'signup'); setError(''); setMessage(''); }}>
-          {mode === 'signup' ? 'Sign in' : 'Create an account'}
-        </button>
-      </p>
+      <div className="page-content form-content">
+        <div className="page-heading">
+          <h1 id="account-title">
+            {mode === 'signup' ? 'Create an account' : 'Welcome back'}
+          </h1>
+          <p>
+            {mode === 'signup'
+              ? 'Join Adoptail to apply for a pet and request a visit.'
+              : 'Sign in to view your applications and request a visit.'}
+          </p>
+        </div>
+        {message && <Message kind="success">{message}</Message>}
+        {error && <Message kind="error">{error}</Message>}
+        <form onSubmit={handleSubmit} aria-busy={busy}>
+          {mode === 'signup' && (
+            <div className="field">
+              <label htmlFor="displayName">Full name</label>
+              <input
+                id="displayName"
+                name="displayName"
+                autoComplete="name"
+                required
+                maxLength={100}
+              />
+            </div>
+          )}
+          <div className="field">
+            <label htmlFor="email">Email</label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              autoComplete="email"
+              required
+              maxLength={254}
+            />
+          </div>
+          <div className="field">
+            <label htmlFor="password">Password</label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              autoComplete={
+                mode === 'signup' ? 'new-password' : 'current-password'
+              }
+              required
+              minLength={8}
+            />
+          </div>
+          {mode === 'signup' && (
+            <p className="field-hint">
+              Use at least 8 characters for your password.
+            </p>
+          )}
+          <button className="button" type="submit" disabled={busy}>
+            {busy
+              ? 'Please wait…'
+              : mode === 'signup'
+                ? 'Create account'
+                : 'Sign in'}
+          </button>
+        </form>
+        <p className="form-footer">
+          {mode === 'signup'
+            ? 'Already have an account? '
+            : 'New to Adoptail? '}
+          <button
+            type="button"
+            className="text-button"
+            disabled={busy}
+            onClick={() => {
+              setMode(mode === 'signup' ? 'signin' : 'signup');
+              setError('');
+              setMessage('');
+            }}
+          >
+            {mode === 'signup' ? 'Sign in' : 'Create an account'}
+          </button>
+        </p>
+      </div>
     </section>
   );
 }
