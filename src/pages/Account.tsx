@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../auth/AuthContext';
-import { ArrowRight, LogOut, UserRound } from 'lucide-react';
+import { LogOut, UserRound } from 'lucide-react';
 import Message from '../components/Message';
 import { requestError } from '../lib/messages';
 
@@ -95,32 +95,45 @@ export default function Account() {
     );
 
   if (session) {
+    const name = session.user.user_metadata.display_name;
+
     return (
       <section className="section container" aria-labelledby="account-title">
         <div className="page-content">
           <div className="page-heading">
-            <h1 id="account-title">Your account</h1>
-            <p>Manage your adoption journey.</p>
+            <h1 id="account-title">Your profile</h1>
           </div>
           {error && <Message kind="error">{error}</Message>}
           <div className="account-details">
-            <UserRound size={24} aria-hidden="true" />
-            <div>
-              <p className="detail-label">Signed in as</p>
-              <p className="account-email">{session.user.email}</p>
+            <span className="profile-icon">
+              <UserRound size={24} aria-hidden="true" />
+            </span>
+            <div className="account-info">
+              <h2>Account details</h2>
+              <dl className="account-fields">
+                {typeof name === 'string' && name.trim() && (
+                  <div>
+                    <dt>Name</dt>
+                    <dd>{name}</dd>
+                  </div>
+                )}
+                <div>
+                  <dt>Email address</dt>
+                  <dd>{session.user.email}</dd>
+                </div>
+                <div>
+                  <dt>Member since</dt>
+                  <dd>
+                    {new Date(session.user.created_at).toLocaleDateString(
+                      undefined,
+                      { month: 'long', day: 'numeric', year: 'numeric' },
+                    )}
+                  </dd>
+                </div>
+              </dl>
             </div>
           </div>
-          <div className="account-section">
-            <h2>Your applications</h2>
-            <p>View your submitted applications and their latest status.</p>
-            <Link className="text-link" to="/applications">
-              View applications <ArrowRight size={17} aria-hidden="true" />
-            </Link>
-          </div>
           <div className="account-actions">
-            <Link className="button button-small" to="/pets">
-              Find a pet <ArrowRight size={17} aria-hidden="true" />
-            </Link>
             <button
               className="button button-secondary button-small"
               type="button"

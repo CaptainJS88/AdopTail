@@ -58,14 +58,15 @@ a:focus-visible, button:focus-visible { outline: 3px solid #b73142; outline-offs
 .text-button { padding: 0; background: none; border: 0; cursor: pointer; font-family: inherit; }
 .form-footer { margin-top: 24px; color: var(--muted); font-size: 14px; line-height: 1.7; }
 .field-hint { color: var(--muted); font-size: 13px; margin: -12px 0 24px; }
-.account-details { display: flex; align-items: center; gap: 16px; padding-block: 8px 28px; border-bottom: 1px solid #e6e6e6; }
-.account-details svg { flex-shrink: 0; color: #a83f49; }
-.detail-label { font-size: 13px; color: var(--muted); margin-bottom: 5px; }
-.account-email { font-size: 16px; overflow-wrap: anywhere; }
-.account-section { padding-block: 28px; border-bottom: 1px solid #e6e6e6; }
-.account-section h2 { font-size: 19px; }
-.account-section p { color: var(--muted); font-size: 14px; line-height: 1.7; margin-block: 10px 16px; }
-.account-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+.account-details { display: flex; align-items: flex-start; gap: 20px; padding-block: 8px 32px; border-bottom: 1px solid #e6e6e6; }
+.profile-icon { width: 48px; height: 48px; display: grid; place-items: center; flex-shrink: 0; border-radius: 8px; background: #fff2f2; color: #a83f49; }
+.account-info { flex: 1; min-width: 0; }
+.account-info h2 { font-size: 18px; margin-bottom: 22px; }
+.account-fields { margin: 0; display: grid; gap: 18px; }
+.account-fields > div { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 16px; font-size: 14px; line-height: 1.6; }
+.account-fields dt { color: var(--muted); }
+.account-fields dd { margin: 0; overflow-wrap: anywhere; }
+.account-actions { display: flex; margin-top: 24px; }
 .application-list { display: grid; gap: 16px; }
 .application-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
 .application-heading h2 { font-size: 20px; }
@@ -156,6 +157,8 @@ h3 { font-size: 21px; font-weight: 600; }
   .hero-description { font-size: 15px; }
   .section { padding-block: 32px; }
   .section h1 { font-size: 26px; }
+  .account-details { gap: 16px; }
+  .account-fields > div { grid-template-columns: 1fr; gap: 4px; }
   .search-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .search-filters .search-field { max-width: none; }
   .pet-facts { grid-template-columns: 1fr; gap: 18px; }
