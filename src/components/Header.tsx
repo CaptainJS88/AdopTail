@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowUpRight, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { useAuth } from '../auth/AuthContext';
 
 export default function Header() {
@@ -15,14 +15,13 @@ export default function Header() {
           {menuOpen ? <X /> : <Menu />}
         </button>
         <nav id="main-navigation" className={menuOpen ? 'navigation open' : 'navigation'} aria-label="Main navigation">
-          <a href="/#pets" onClick={() => setMenuOpen(false)}>Meet the pets</a>
-          <a href="/#how-it-works" onClick={() => setMenuOpen(false)}>How adoption works</a>
-          <a href="/#about" onClick={() => setMenuOpen(false)}>About us</a>
+          <Link to="/pets" onClick={() => setMenuOpen(false)}>Find a pet</Link>
+          <Link to="/#how-it-works" onClick={() => setMenuOpen(false)}>How adoption works</Link>
+          <Link to="/about" onClick={() => setMenuOpen(false)}>About us</Link>
           {session && <Link to="/applications" onClick={() => setMenuOpen(false)}>My applications</Link>}
-          <Link className="button button-small" to={session ? '/account' : '/account'} onClick={() => setMenuOpen(false)}>
-            {session ? 'My account' : 'Sign in'} <ArrowUpRight size={17} aria-hidden="true" />
+          <Link to="/account" onClick={() => setMenuOpen(false)}>
+            {session ? 'My account' : 'Sign in'}
           </Link>
-          <Link className="button button-small" to="/pets" onClick={() => setMenuOpen(false)}>Find a pet</Link>
         </nav>
       </div>
     </header>

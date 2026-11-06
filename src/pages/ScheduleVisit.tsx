@@ -4,57 +4,60 @@ import { Link, useSearchParams } from 'react-router-dom';
 import PetLoadState from '../components/PetLoadState';
 import { useAuth } from '../auth/AuthContext';
 import { usePets } from '../hooks/usePets';
-import { supabase } from '../lib/supabase';
 import Message from '../components/Message';
-import { requestError } from '../lib/messages';
+import { validateForm } from '../lib/validation';
+import { shelter, formatTime, getVisitingHours, getVisitTimes, getVisitDate, getVisitError } from '../data/shelter';
+import { useProfile } from '../auth/ProfileContext';
+import type { ContactDetails } from '../auth/ProfileContext';
+import ContactFields from '../components/ContactFields';
+import FormReview from '../components/FormReview';
+
+type VisitDraft = ContactDetails & { petId: string; date: string; time: string; note: string };
 
 export default function ScheduleVisit() {
   const [searchParams] = useSearchParams();
   const { session, loading: authLoading } = useAuth();
+  const { details } = useProfile();
   const { pets, loading, error } = usePets();
   const pet = pets.find((item) => item.id === searchParams.get('pet'));
   const [chooseDate, setChooseDate] = useState('');
   const [chooseTime, setChooseTime] = useState('');
-  const [submitting, setSubmitting] = useState(false);
-  const [message, setMessage] = useState('');
   const [submitError, setSubmitError] = useState('');
+  const [draft, setDraft] = useState<VisitDraft | null>(null);
+  const [reviewing, setReviewing] = useState(false);
   const today = new Date();
-  const minimumDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+  const dateParts = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/Chicago', year: 'numeric', month: '2-digit', day: '2-digit',
+  }).formatToParts(today);
+  const minimumDate = ['year', 'month', 'day'].map((type) => dateParts.find((part) => part.type === type)?.value).join('-');
+  const hours = getVisitingHours(chooseDate);
+  const visitTimes = getVisitTimes(chooseDate);
+  const dateError = !chooseDate ? ''
+    : chooseDate < minimumDate ? 'This date has already passed. Please choose today or a future date.'
+    : !hours?.open ? 'The shelter is closed on Sundays. Please choose Monday through Saturday.'
+    : visitTimes.every((time) => getVisitDate(chooseDate, time) <= today)
+      ? 'No visit times remain on this date. Please choose another day.' : '';
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!pet) return;
-    setSubmitting(true);
-    setMessage('');
-    setSubmitError('');
-    try {
-      const date = new Date(`${chooseDate}T${chooseTime}`);
-      if (Number.isNaN(date.getTime()) || date <= new Date()) {
-        setSubmitError('Choose a valid date and time in the future.');
-        return;
-      }
-      const startsAt = date.toISOString();
-      const { error: rpcError } = await supabase.rpc(
-        'submit_appointment_request',
-        {
-          p_animal_id: pet.id,
-          p_starts_at: startsAt,
-        },
-      );
-      if (rpcError) throw rpcError;
-      setMessage(
-        'Your visit request has been sent. Please wait for the shelter to confirm your appointment.',
-      );
-    } catch (cause) {
-      setSubmitError(
-        requestError(
-          cause,
-          'We could not send your visit request. Please try again.',
-        ),
-      );
-    } finally {
-      setSubmitting(false);
+    const validationError = dateError || validateForm(event.currentTarget) || getVisitError(chooseDate, chooseTime);
+    if (validationError) {
+      setSubmitError(validationError);
+      return;
     }
+    setSubmitError('');
+    const form = new FormData(event.currentTarget);
+    setDraft({
+      petId: pet.id,
+      fullName: String(form.get('fullName')).trim(),
+      phone: String(form.get('phone')).replace(/\D/g, ''),
+      city: details.city,
+      date: chooseDate,
+      time: chooseTime,
+      note: String(form.get('note') || '').trim(),
+    });
+    setReviewing(true);
   }
 
   if (loading || error)
@@ -83,6 +86,16 @@ export default function ScheduleVisit() {
         <Message kind="loading">Checking your session...</Message>
       </section>
     );
+  if (!['available', 'pending'].includes(pet.adoptionStatus))
+    return (
+      <section className="section container">
+        <div className="page-content">
+          <div className="page-heading"><h1>Visit {pet.name}</h1></div>
+          <Message>{pet.name} is not accepting visit requests right now. Please choose another pet.</Message>
+          <Link className="text-link" to="/pets">Find a pet</Link>
+        </div>
+      </section>
+    );
   if (!session)
     return (
       <section className="section container">
@@ -102,51 +115,104 @@ export default function ScheduleVisit() {
       </section>
     );
 
+  const currentDraft = draft?.petId === pet.id ? draft : null;
+  const showReview = reviewing && currentDraft;
+
   return (
     <section className="section container" aria-labelledby="visit-title">
       <div className="page-content form-content">
         <div className="page-heading">
           <h1 id="visit-title">Visit {pet.name}</h1>
-          <p>Choose a preferred date and time.</p>
+          <p>Choose a 30-minute visit during opening hours. All times are Central Time.</p>
         </div>
-        {!message && (
-          <Message>
-            The shelter will review your request and confirm availability.
-          </Message>
+        {!showReview && <Message>Frontend preview. You can review a visit request, but it cannot be sent to the shelter yet. Details clear when you leave or refresh this page.</Message>}
+        {!showReview && (
+          <div className="visit-hours">
+            <h2>Visiting hours</h2>
+            <dl className="shelter-hours">
+              {shelter.hours.map((hours) => (
+                <div key={hours.days}>
+                  <dt>{hours.days}</dt>
+                  <dd>{hours.open ? `${formatTime(hours.open)} to ${formatTime(hours.close)}` : 'Closed'}</dd>
+                </div>
+              ))}
+            </dl>
+            <p className="demo-notice">Demo hours. Visits must finish before closing.</p>
+          </div>
         )}
-        {submitError && <Message kind="error">{submitError}</Message>}
-        {message && <Message kind="success">{message}</Message>}
-        {!message && (
-          <form onSubmit={handleSubmit}>
+        {!showReview && dateError && <Message kind="error">{dateError}</Message>}
+        {submitError && !submitError.startsWith('Phone number:') && <Message kind="error">{submitError}</Message>}
+        {showReview ? (
+          <FormReview title="Review your visit request" onEdit={() => setReviewing(false)} items={[
+            { label: 'Pet', value: pet.name },
+            { label: 'Full name', value: currentDraft.fullName },
+            { label: 'Email', value: session.user.email || '' },
+            { label: 'Phone', value: currentDraft.phone },
+            { label: 'Preferred date', value: new Date(`${currentDraft.date}T12:00:00Z`).toLocaleDateString(undefined, { timeZone: 'America/Chicago', month: 'long', day: 'numeric', year: 'numeric' }) },
+            { label: 'Preferred time', value: `${formatTime(currentDraft.time)} Central Time` },
+            { label: 'Visit length', value: '30 minutes' },
+            { label: 'Questions for the shelter', value: currentDraft.note },
+          ]} />
+        ) : (
+          <form key={pet.id} onSubmit={handleSubmit} onChange={() => setSubmitError('')} noValidate>
+            <fieldset className="form-section">
+              <legend>Contact details</legend>
+              <p className="form-intro">Fields marked with an asterisk are required. Other fields are marked optional.</p>
+              <ContactFields details={currentDraft || details} email={session.user.email || ''} includeCity={false} formError={submitError} />
+            </fieldset>
+            <fieldset className="form-section">
+              <legend>Visit details</legend>
             <div className="field">
-              <label htmlFor="chooseDate">Preferred date</label>
+              <label htmlFor="chooseDate">Preferred date <span className="required-mark" aria-hidden="true">*</span></label>
               <input
                 id="chooseDate"
                 type="date"
                 required
                 min={minimumDate}
                 value={chooseDate}
-                onChange={(event) => setChooseDate(event.target.value)}
+                aria-invalid={Boolean(dateError)}
+                aria-describedby="visit-date-hint"
+                onChange={(event) => {
+                  setChooseDate(event.target.value);
+                  setChooseTime('');
+                  setSubmitError('');
+                }}
               />
+              <p className="input-hint" id="visit-date-hint">Open Monday through Saturday. Closed Sundays.</p>
             </div>
             <div className="field">
-              <label htmlFor="chooseTime">Preferred time</label>
-              <input
+              <label htmlFor="chooseTime">Preferred time <span className="required-mark" aria-hidden="true">*</span></label>
+              <select
                 id="chooseTime"
-                type="time"
                 required
                 value={chooseTime}
-                onChange={(event) => setChooseTime(event.target.value)}
-              />
+                disabled={!chooseDate || Boolean(dateError)}
+                aria-describedby="visit-time-hint"
+                onChange={(event) => {
+                  setChooseTime(event.target.value);
+                  setSubmitError('');
+                }}
+              >
+                <option value="">{chooseDate ? 'Choose a time' : 'Choose a date first'}</option>
+                {visitTimes.map((time) => (
+                  <option key={time} value={time} disabled={getVisitDate(chooseDate, time) <= today}>
+                    {formatTime(time)}
+                  </option>
+                ))}
+              </select>
+              <p className="input-hint" id="visit-time-hint">Only opening-hour times are shown. Times that have passed cannot be selected.</p>
             </div>
-            <button className="button" type="submit" disabled={submitting}>
-              {submitting ? 'Sending…' : 'Request visit'}
-            </button>
+            <div className="field">
+              <label htmlFor="visitNote">Questions for the shelter (optional)</label>
+              <textarea id="visitNote" name="note" rows={3} maxLength={1000} defaultValue={currentDraft?.note || ''} />
+            </div>
+            </fieldset>
+            <button className="button" type="submit" disabled={Boolean(dateError)}>Review visit request</button>
           </form>
         )}
         <p className="form-footer">
-          <Link className="text-link" to="/applications">
-            View your applications
+          <Link className="text-link" to={`/pets/${pet.id}`}>
+            Back to {pet.name}'s details
           </Link>
         </p>
       </div>

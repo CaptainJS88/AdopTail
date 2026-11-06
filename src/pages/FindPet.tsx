@@ -63,8 +63,7 @@ export default function FindPet() {
         <span className="sample-label">Shelter listings</span>
       </div>
       <p className="hero-description">
-        Step 1 of 3: choose a pet, fill out an application, then request a
-        visit.
+        View a pet's details to apply or request a visit.
       </p>
       <div className="search-filters">
         <div className="field search-field">
@@ -158,7 +157,7 @@ export default function FindPet() {
           </div>
           <div className="pet-grid">
             {filteredPets.map((pet) => (
-              <PetCard key={pet.id} pet={pet} showApply />
+              <PetCard key={pet.id} pet={pet} />
             ))}
           </div>
           {filteredPets.length === 0 && (

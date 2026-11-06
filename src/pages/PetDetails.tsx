@@ -69,6 +69,15 @@ export default function PetDetails() {
           <ArrowLeft size={16} aria-hidden="true" />
           Back to pets
         </Link>
+        {pet.photoUrl && (
+          <img
+            className="pet-detail-photo"
+            src={pet.photoUrl}
+            alt={`${pet.name}, ${pet.breed || pet.species}`}
+            width="900"
+            height="600"
+          />
+        )}
         <div className="page-heading pet-heading">
           <div>
             <h1 id="pet-title">{pet.name}</h1>
@@ -155,7 +164,7 @@ export default function PetDetails() {
             </>
           )}
         </div>
-        <div className="pet-section">
+        <div className="pet-section pet-detail-actions">
           {pet.adoptionStatus === 'available' ? (
             <Link className="button" to={`/adopt?pet=${pet.id}`}>
               Apply for {pet.name}
@@ -165,6 +174,14 @@ export default function PetDetails() {
             <Message>
               {pet.name} is not currently accepting adoption applications.
             </Message>
+          )}
+          {['available', 'pending'].includes(pet.adoptionStatus) && (
+            <Link
+              className="button button-secondary"
+              to={`/visit?pet=${pet.id}`}
+            >
+              Schedule a visit
+            </Link>
           )}
         </div>
       </div>

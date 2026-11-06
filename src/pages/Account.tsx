@@ -3,9 +3,11 @@ import type { FormEvent } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../auth/AuthContext';
-import { LogOut, UserRound } from 'lucide-react';
+import { LogOut } from 'lucide-react';
+import ProfileDetails from '../components/ProfileDetails';
 import Message from '../components/Message';
 import { requestError } from '../lib/messages';
+import { validateForm } from '../lib/validation';
 
 export default function Account() {
   const { session, loading, signOut } = useAuth();
@@ -21,6 +23,12 @@ export default function Account() {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const validationError = validateForm(event.currentTarget);
+    if (validationError) {
+      setMessage('');
+      setError(validationError);
+      return;
+    }
     setBusy(true);
     setMessage('');
     setError('');
@@ -95,8 +103,6 @@ export default function Account() {
     );
 
   if (session) {
-    const name = session.user.user_metadata.display_name;
-
     return (
       <section className="section container" aria-labelledby="account-title">
         <div className="page-content">
@@ -104,35 +110,7 @@ export default function Account() {
             <h1 id="account-title">Your profile</h1>
           </div>
           {error && <Message kind="error">{error}</Message>}
-          <div className="account-details">
-            <span className="profile-icon">
-              <UserRound size={24} aria-hidden="true" />
-            </span>
-            <div className="account-info">
-              <h2>Account details</h2>
-              <dl className="account-fields">
-                {typeof name === 'string' && name.trim() && (
-                  <div>
-                    <dt>Name</dt>
-                    <dd>{name}</dd>
-                  </div>
-                )}
-                <div>
-                  <dt>Email address</dt>
-                  <dd>{session.user.email}</dd>
-                </div>
-                <div>
-                  <dt>Member since</dt>
-                  <dd>
-                    {new Date(session.user.created_at).toLocaleDateString(
-                      undefined,
-                      { month: 'long', day: 'numeric', year: 'numeric' },
-                    )}
-                  </dd>
-                </div>
-              </dl>
-            </div>
-          </div>
+          <ProfileDetails key={session.user.id} />
           <div className="account-actions">
             <button
               className="button button-secondary button-small"
@@ -164,10 +142,11 @@ export default function Account() {
         </div>
         {message && <Message kind="success">{message}</Message>}
         {error && <Message kind="error">{error}</Message>}
-        <form onSubmit={handleSubmit} aria-busy={busy}>
+        <form onSubmit={handleSubmit} onChange={() => setError('')} aria-busy={busy} noValidate>
+          <p className="form-intro">Fields marked with an asterisk are required.</p>
           {mode === 'signup' && (
             <div className="field">
-              <label htmlFor="displayName">Full name</label>
+              <label htmlFor="displayName">Full name <span className="required-mark" aria-hidden="true">*</span></label>
               <input
                 id="displayName"
                 name="displayName"
@@ -178,7 +157,7 @@ export default function Account() {
             </div>
           )}
           <div className="field">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email">Email <span className="required-mark" aria-hidden="true">*</span></label>
             <input
               id="email"
               name="email"
@@ -189,7 +168,7 @@ export default function Account() {
             />
           </div>
           <div className="field">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">Password <span className="required-mark" aria-hidden="true">*</span></label>
             <input
               id="password"
               name="password"
@@ -198,7 +177,7 @@ export default function Account() {
                 mode === 'signup' ? 'new-password' : 'current-password'
               }
               required
-              minLength={8}
+              minLength={mode === 'signup' ? 8 : undefined}
             />
           </div>
           {mode === 'signup' && (

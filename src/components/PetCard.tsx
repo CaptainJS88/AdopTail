@@ -1,15 +1,19 @@
 import { Link } from 'react-router-dom';
 import type { Pet } from '../data/pets';
 
-export default function PetCard({
-  pet,
-  showApply = false,
-}: {
-  pet: Pet;
-  showApply?: boolean;
-}) {
+export default function PetCard({ pet }: { pet: Pet }) {
   return (
     <article className="pet-card">
+      {pet.photoUrl && (
+        <img
+          className="pet-card-photo"
+          src={pet.photoUrl}
+          alt={`${pet.name}, ${pet.breed || pet.species}`}
+          loading="lazy"
+          width="600"
+          height="450"
+        />
+      )}
       <div className="pet-card-content">
         <h3>{pet.name}</h3>
         <p className="pet-details">{pet.details}</p>
@@ -21,15 +25,6 @@ export default function PetCard({
           >
             View details
           </Link>
-          {showApply && pet.adoptionStatus === 'available' && (
-            <Link
-              className="button button-small"
-              to={`/adopt?pet=${pet.id}`}
-              aria-label={`Apply to adopt ${pet.name}`}
-            >
-              Apply
-            </Link>
-          )}
         </div>
       </div>
     </article>

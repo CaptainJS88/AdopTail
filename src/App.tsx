@@ -1,6 +1,6 @@
 import { Link, Route, Routes, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
-import { AuthProvider } from './auth/AuthContext';
+import { AuthProvider, useAuth } from './auth/AuthContext';
 import Header from './components/Header';
 import Home from './pages/Home';
 import FindPet from './pages/FindPet';
@@ -9,9 +9,13 @@ import ScheduleVisit from './pages/ScheduleVisit';
 import Account from './pages/Account';
 import Applications from './pages/Applications';
 import PetDetails from './pages/PetDetails';
+import About from './pages/About';
+import Footer from './components/Footer';
+import { ProfileProvider } from './auth/ProfileContext';
 
 function AppRoutes() {
   const { pathname, hash } = useLocation();
+  const { session } = useAuth();
   useEffect(() => {
     if (hash) document.getElementById(hash.slice(1))?.scrollIntoView();
     else window.scrollTo(0, 0);
@@ -24,19 +28,21 @@ function AppRoutes() {
       <main id="main">
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
           <Route path="/pets" element={<FindPet />} />
           <Route path="/pets/:id" element={<PetDetails />} />
-          <Route path="/adopt" element={<AdoptPet />} />
-          <Route path="/visit" element={<ScheduleVisit />} />
+          <Route path="/adopt" element={<AdoptPet key={session?.user.id} />} />
+          <Route path="/visit" element={<ScheduleVisit key={session?.user.id} />} />
           <Route path="/account" element={<Account />} />
           <Route path="/applications" element={<Applications />} />
           <Route path="*" element={<section className="section container"><div className="page-content"><div className="page-heading"><h1>Page not found</h1><p>This page may have moved or the link is incorrect.</p></div><Link className="button" to="/">Back to home</Link></div></section>} />
         </Routes>
       </main>
+      <Footer />
     </>
   );
 }
 
 export default function App() {
-  return <AuthProvider><AppRoutes /></AuthProvider>;
+  return <AuthProvider><ProfileProvider><AppRoutes /></ProfileProvider></AuthProvider>;
 }
