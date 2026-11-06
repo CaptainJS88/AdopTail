@@ -12,7 +12,6 @@ export default function ProfileDetails() {
   const { details, updateDetails } = useProfile();
   const [editing, setEditing] = useState(false);
   const [error, setError] = useState('');
-  const [updated, setUpdated] = useState(false);
   if (!session) return null;
 
   function handlePreview(event: FormEvent<HTMLFormElement>) {
@@ -26,13 +25,11 @@ export default function ProfileDetails() {
       city: String(form.get('city')).trim(),
     });
     setError('');
-    setUpdated(true);
     setEditing(false);
   }
 
   return (
     <>
-      <Message>{updated ? 'Profile preview updated. These details will prefill your forms during this session, but are not saved to your account.' : 'Profile preview. New contact details are not saved to your account yet and clear on refresh or sign out.'}</Message>
       {error && !error.startsWith('Phone number:') && <Message kind="error">{error}</Message>}
       {editing ? (
         <form onSubmit={handlePreview} onChange={() => setError('')} noValidate>
@@ -62,7 +59,7 @@ export default function ProfileDetails() {
             </div>
           </div>
           <div className="account-actions">
-            <button className="button button-small" type="button" onClick={() => { setEditing(true); setUpdated(false); }}>Edit profile</button>
+            <button className="button button-small" type="button" onClick={() => setEditing(true)}>Edit profile</button>
           </div>
         </>
       )}

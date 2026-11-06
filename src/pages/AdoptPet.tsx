@@ -114,9 +114,6 @@ export default function AdoptPet() {
           <h1 id="application-title">Apply for {pet.name}</h1>
           <p>Tell the shelter about yourself and the home you can offer.</p>
         </div>
-        {!(reviewing && currentDraft) && <Message>
-          Frontend preview. You can fill out and review this form, but it cannot be sent to the shelter yet. Details clear when you leave or refresh this page.
-        </Message>}
         {submitError && !submitError.startsWith('Phone number:') && <Message kind="error">{submitError}</Message>}
         {reviewing && currentDraft ? (
           <FormReview title="Review your application" onEdit={() => setReviewing(false)} items={[
