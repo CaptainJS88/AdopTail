@@ -39,7 +39,7 @@ export default function ProfileDetails() {
             <ContactFields details={details} email={session.user.email || ''} formError={error} />
           </fieldset>
           <div className="form-actions">
-            <button className="button" type="submit">Update preview</button>
+            <button className="button" type="submit">Update details</button>
             <button className="button button-secondary" type="button" onClick={() => { setEditing(false); setError(''); }}>Cancel</button>
           </div>
         </form>
