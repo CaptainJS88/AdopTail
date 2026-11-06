@@ -1,4 +1,5 @@
 import { supabase } from '../lib/supabase';
+import { petPhotos } from './petPhotos';
 
 export interface Pet {
   id: string;
@@ -10,6 +11,7 @@ export interface Pet {
   careNeeds: string;
   adoptionStatus: string;
   details: string;
+  photoUrl: string | null;
 }
 
 type AnimalRow = {
@@ -48,6 +50,7 @@ function mapAnimal(row: AnimalRow): Pet {
     careNeeds: row.care_needs,
     adoptionStatus: row.adoption_status,
     details,
+    photoUrl: petPhotos[row.id] ?? null,
   };
 }
 
