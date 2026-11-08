@@ -22,6 +22,7 @@ export default function Header() {
           <Link to="/account" onClick={() => setMenuOpen(false)}>
             {session ? 'My account' : 'Sign in'}
           </Link>
+          <Link to="/FAQ" onClick={() => setMenuOpen(false)}>FAQs</Link>
         </nav>
       </div>
     </header>
