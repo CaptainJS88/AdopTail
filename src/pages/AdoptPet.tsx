@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import PetLoadState from '../components/PetLoadState';
 import { useAuth } from '../auth/AuthContext';
 import { usePets } from '../hooks/usePets';
@@ -10,6 +10,8 @@ import { useProfile } from '../auth/ProfileContext';
 import type { ContactDetails } from '../auth/ProfileContext';
 import ContactFields from '../components/ContactFields';
 import FormReview from '../components/FormReview';
+import { supabase } from '../lib/supabase';
+import { requestError } from '../lib/messages';
 
 type ApplicationDraft = ContactDetails & {
   petId: string;
@@ -27,11 +29,14 @@ export default function AdoptPet() {
   const [searchParams] = useSearchParams();
   const { session, loading: authLoading } = useAuth();
   const { details } = useProfile();
+  const navigate = useNavigate();
   const { pets, loading, error } = usePets();
   const [submitError, setSubmitError] = useState('');
   const [draft, setDraft] = useState<ApplicationDraft | null>(null);
   const [reviewing, setReviewing] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const pet = pets.find((item) => item.id === searchParams.get('pet'));
+  const currentDraft = draft?.petId === pet?.id ? draft : null;
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -53,6 +58,35 @@ export default function AdoptPet() {
       dailyCare: value('dailyCare'), reason: value('reason'),
     });
     setReviewing(true);
+  }
+
+  async function handleConfirm() {
+    if (!pet || !session || !currentDraft || submitting) return;
+    setSubmitting(true);
+    setSubmitError('');
+    try {
+      const { error: submitErrorResult } = await supabase.rpc('submit_adoption_application', {
+        p_animal_id: pet.id,
+        p_application_data: {
+          full_name: currentDraft.fullName,
+          phone: currentDraft.phone,
+          city: currentDraft.city,
+          housing_type: currentDraft.housingType,
+          home_ownership: currentDraft.homeOwnership,
+          pet_permission: currentDraft.petPermission,
+          household: currentDraft.household,
+          other_pets: currentDraft.otherPets,
+          experience: currentDraft.experience,
+          daily_care: currentDraft.dailyCare,
+          reason: currentDraft.reason,
+        },
+      });
+      if (submitErrorResult) throw submitErrorResult;
+      navigate('/applications');
+    } catch (cause) {
+      setSubmitError(requestError(cause, 'Your application could not be submitted. Please review it and try again.'));
+      setSubmitting(false);
+    }
   }
 
   if (loading || error)
@@ -105,8 +139,6 @@ export default function AdoptPet() {
   if (pet.adoptionStatus !== 'available')
     return <section className="section container"><Message>{pet.name} is not accepting adoption applications right now.</Message><Link className="text-link" to={`/pets/${pet.id}`}>Back to pet details</Link></section>;
 
-  const currentDraft = draft?.petId === pet.id ? draft : null;
-
   return (
     <section className="section container" aria-labelledby="application-title">
       <div className="page-content">
@@ -114,9 +146,9 @@ export default function AdoptPet() {
           <h1 id="application-title">Apply for {pet.name}</h1>
           <p>Tell the shelter about yourself and the home you can offer.</p>
         </div>
-        {submitError && !submitError.startsWith('Phone number:') && <Message kind="error">{submitError}</Message>}
+        {submitError && <Message kind="error">{submitError}</Message>}
         {reviewing && currentDraft ? (
-          <FormReview title="Review your application" onEdit={() => setReviewing(false)} items={[
+          <FormReview title="Review your application" onEdit={() => setReviewing(false)} onConfirm={handleConfirm} confirmLabel="Submit application" busy={submitting} items={[
             { label: 'Pet', value: pet.name },
             { label: 'Full name', value: currentDraft.fullName },
             { label: 'Email', value: session.user.email || '' },

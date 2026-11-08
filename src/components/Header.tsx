@@ -2,10 +2,12 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { useAuth } from '../auth/AuthContext';
+import { useProfile } from '../auth/ProfileContext';
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const { session } = useAuth();
+  const { role, staffAccessApproved } = useProfile();
 
   return (
     <header className="site-header">
@@ -19,6 +21,7 @@ export default function Header() {
           <Link to="/#how-it-works" onClick={() => setMenuOpen(false)}>How adoption works</Link>
           <Link to="/about" onClick={() => setMenuOpen(false)}>About us</Link>
           {session && <Link to="/applications" onClick={() => setMenuOpen(false)}>My applications</Link>}
+          {session && role === 'staff' && staffAccessApproved && <Link to="/staff" onClick={() => setMenuOpen(false)}>Staff dashboard</Link>}
           <Link to="/account" onClick={() => setMenuOpen(false)}>
             {session ? 'My account' : 'Sign in'}
           </Link>
