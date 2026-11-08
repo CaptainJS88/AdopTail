@@ -11,6 +11,8 @@ import { useProfile } from '../auth/ProfileContext';
 import type { ContactDetails } from '../auth/ProfileContext';
 import ContactFields from '../components/ContactFields';
 import FormReview from '../components/FormReview';
+import { supabase } from '../lib/supabase';
+import { requestError } from '../lib/messages';
 
 type VisitDraft = ContactDetails & { petId: string; date: string; time: string; note: string };
 
@@ -25,6 +27,9 @@ export default function ScheduleVisit() {
   const [submitError, setSubmitError] = useState('');
   const [draft, setDraft] = useState<VisitDraft | null>(null);
   const [reviewing, setReviewing] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [requestSent, setRequestSent] = useState(false);
+  const currentDraft = draft?.petId === pet?.id ? draft : null;
   const today = new Date();
   const dateParts = new Intl.DateTimeFormat('en-US', {
     timeZone: 'America/Chicago', year: 'numeric', month: '2-digit', day: '2-digit',
@@ -58,6 +63,29 @@ export default function ScheduleVisit() {
       note: String(form.get('note') || '').trim(),
     });
     setReviewing(true);
+  }
+
+  async function handleConfirm() {
+    if (!pet || !currentDraft || submitting) return;
+    setSubmitting(true);
+    setSubmitError('');
+    try {
+      const { error: submitErrorResult } = await supabase.rpc('submit_appointment_request', {
+        p_animal_id: pet.id,
+        p_starts_at: getVisitDate(currentDraft.date, currentDraft.time).toISOString(),
+        p_contact_details: {
+          full_name: currentDraft.fullName,
+          phone: currentDraft.phone,
+          note: currentDraft.note,
+        },
+      });
+      if (submitErrorResult) throw submitErrorResult;
+      setRequestSent(true);
+    } catch (cause) {
+      setSubmitError(requestError(cause, 'Your visit request could not be submitted. Please review it and try again.'));
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   if (loading || error)
@@ -115,7 +143,6 @@ export default function ScheduleVisit() {
       </section>
     );
 
-  const currentDraft = draft?.petId === pet.id ? draft : null;
   const showReview = reviewing && currentDraft;
 
   return (
@@ -139,10 +166,13 @@ export default function ScheduleVisit() {
             <p className="demo-notice">Demo hours. Visits must finish before closing.</p>
           </div>
         )}
-        {!showReview && dateError && <Message kind="error">{dateError}</Message>}
-        {submitError && !submitError.startsWith('Phone number:') && <Message kind="error">{submitError}</Message>}
-        {showReview ? (
-          <FormReview title="Review your visit request" onEdit={() => setReviewing(false)} items={[
+        {requestSent && <Message kind="success">Your visit request was sent to the shelter. They will confirm or suggest another time.</Message>}
+        {!requestSent && !showReview && dateError && <Message kind="error">{dateError}</Message>}
+        {submitError && <Message kind="error">{submitError}</Message>}
+        {requestSent ? (
+          <div className="empty-state"><Link className="button button-secondary" to="/pets">Back to pets</Link></div>
+        ) : showReview ? (
+          <FormReview title="Review your visit request" onEdit={() => setReviewing(false)} onConfirm={handleConfirm} confirmLabel="Send visit request" busy={submitting} items={[
             { label: 'Pet', value: pet.name },
             { label: 'Full name', value: currentDraft.fullName },
             { label: 'Email', value: session.user.email || '' },
