@@ -125,7 +125,6 @@ export default function ScheduleVisit() {
           <h1 id="visit-title">Visit {pet.name}</h1>
           <p>Choose a 30-minute visit during opening hours. All times are Central Time.</p>
         </div>
-        {!showReview && <Message>Frontend preview. You can review a visit request, but it cannot be sent to the shelter yet. Details clear when you leave or refresh this page.</Message>}
         {!showReview && (
           <div className="visit-hours">
             <h2>Visiting hours</h2>
