@@ -12,6 +12,7 @@ import PetDetails from './pages/PetDetails';
 import About from './pages/About';
 import Footer from './components/Footer';
 import { ProfileProvider } from './auth/ProfileContext';
+import FAQ from './pages/FAQ';
 
 function AppRoutes() {
   const { pathname, hash } = useLocation();
@@ -36,6 +37,7 @@ function AppRoutes() {
           <Route path="/account" element={<Account />} />
           <Route path="/applications" element={<Applications />} />
           <Route path="*" element={<section className="section container"><div className="page-content"><div className="page-heading"><h1>Page not found</h1><p>This page may have moved or the link is incorrect.</p></div><Link className="button" to="/">Back to home</Link></div></section>} />
+          <Route path="/FAQ" element={<FAQ />} />
         </Routes>
       </main>
       <Footer />

@@ -170,6 +170,24 @@ h3 { font-size: 21px; font-weight: 600; }
 .footer-links a { display: inline-flex; gap: 8px; align-items: center; }
 .footer-links a:hover { color: #a83f49; }
 
+.FAQ-content summary{ display: flex; align-items: center; gap: 8px; cursor: pointer; list-style: none;}
+.FAQ-content summary::-webkit-details-marker {display: none;}
+.FAQ-content summary::before { content: '▶'; flex: 0 0 1em; font-size: 0.75em; transition: transform 150ms ease;}
+.FAQ-content details[open] summary::before {transform: rotate(90deg);}
+.FAQ-content details { display: flex; flex-direction: column; justify-content: center;}
+.FAQ-content {flex: 1; display: grid; grid-template-rows: repeat (4, minmax(0, 1fr)); gap: 24px; margin-top: 24px;}
+.FAQ-intro section + section { margin-top: 32px; }
+.FAQ-intro p, .FAQ-intro li { color: var(--muted); font-size: 14px; line-height: 1.8; }
+.FAQ-intro p { margin-top: 14px; }
+.FAQ-intro ul { padding-left: 20px; margin-block: 14px 20px; }
+.FAQ-intro li + li { margin-top: 8px; }
+.FAQ-intro { display: grid; grid-template-columns: 1.2fr 1fr; align-items: start; gap: 64px; margin-top: 40px; }
+.FAQ-photo { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; object-position: center 10%; border-radius: 8px; }
+.FAQ-divider { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 48px; padding-bottom: 1px; border-bottom: 1px solid #e6e6e6; border: 0; border-top: 1px solid #e6e6e6;}
+.FAQ-divider .page-heading { margin-bottom: 0; }
+.FAQ-divider .page-heading > p + p { margin-top: 1px; }
+.FAQ-left { display: flex; flex-direction: column;}
+
 @media (max-width: 1050px) {
   .header-content { position: relative; }
   .menu-button { display: inline-flex; }
