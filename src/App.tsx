@@ -1,19 +1,21 @@
-import { Link, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { lazy, Suspense, useEffect } from 'react';
+import { Link, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './auth/AuthContext';
-import Header from './components/Header';
-import Home from './pages/Home';
-import FindPet from './pages/FindPet';
-import AdoptPet from './pages/AdoptPet';
-import ScheduleVisit from './pages/ScheduleVisit';
-import Account from './pages/Account';
-import Applications from './pages/Applications';
-import PetDetails from './pages/PetDetails';
-import About from './pages/About';
-import Footer from './components/Footer';
-const StaffDashboard = lazy(() => import('./pages/StaffDashboard'));
-import Message from './components/Message';
 import { ProfileProvider, useProfile } from './auth/ProfileContext';
+import Footer from './components/Footer';
+import Header from './components/Header';
+import Message from './components/Message';
+import About from './pages/About';
+import Account from './pages/Account';
+import AdoptPet from './pages/AdoptPet';
+import Applications from './pages/Applications';
+import FAQ from './pages/FAQ';
+import FindPet from './pages/FindPet';
+import Home from './pages/Home';
+import PetDetails from './pages/PetDetails';
+import ScheduleVisit from './pages/ScheduleVisit';
+
+const StaffDashboard = lazy(() => import('./pages/StaffDashboard'));
 
 function StaffRoute() {
   const { session, loading: authLoading } = useAuth();
@@ -47,6 +49,7 @@ function AppRoutes() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
+          <Route path="/FAQ" element={<FAQ />} />
           <Route path="/pets" element={<FindPet />} />
           <Route path="/pets/:id" element={<PetDetails />} />
           <Route path="/adopt" element={<AdoptPet key={session?.user.id} />} />
