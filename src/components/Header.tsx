@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { useAuth } from '../auth/AuthContext';
 import { useProfile } from '../auth/ProfileContext';
@@ -17,15 +17,15 @@ export default function Header() {
           {menuOpen ? <X /> : <Menu />}
         </button>
         <nav id="main-navigation" className={menuOpen ? 'navigation open' : 'navigation'} aria-label="Main navigation">
-          <Link to="/pets" onClick={() => setMenuOpen(false)}>Find a pet</Link>
-          <Link to="/#how-it-works" onClick={() => setMenuOpen(false)}>How adoption works</Link>
-          <Link to="/about" onClick={() => setMenuOpen(false)}>About us</Link>
-          {session && <Link to="/applications" onClick={() => setMenuOpen(false)}>My applications</Link>}
-          {session && role === 'staff' && staffAccessApproved && <Link to="/staff" onClick={() => setMenuOpen(false)}>Staff dashboard</Link>}
-          <Link to="/account" onClick={() => setMenuOpen(false)}>
+          <NavLink to="/" end onClick={() => setMenuOpen(false)}>Home</NavLink>
+          <NavLink to="/pets" onClick={() => setMenuOpen(false)}>Find a pet</NavLink>
+          {session && <NavLink to="/applications" onClick={() => setMenuOpen(false)}>My applications</NavLink>}
+          {session && role === 'staff' && staffAccessApproved && <NavLink to="/staff" onClick={() => setMenuOpen(false)}>Staff dashboard</NavLink>}
+          <NavLink to="/about" onClick={() => setMenuOpen(false)}>About us</NavLink>
+          <NavLink to="/FAQ" onClick={() => setMenuOpen(false)}>FAQs</NavLink>
+          <NavLink to="/account" onClick={() => setMenuOpen(false)}>
             {session ? 'My account' : 'Sign in'}
-          </Link>
-          <Link to="/FAQ" onClick={() => setMenuOpen(false)}>FAQs</Link>
+          </NavLink>
         </nav>
       </div>
     </header>

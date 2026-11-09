@@ -8,8 +8,7 @@ export default function About() {
       <div className="about-intro">
         <div className="page-heading">
           <h1 id="about-title">About us</h1>
-          <p>Helping pets find a home, one connection at a time.</p>
-          <p>Adoptail connects shelter pets with people ready to welcome them into their lives. We make it easy to learn about each pet and take the next step toward adoption.</p>
+          <p>Adoptail connects people with pets looking for a home.</p>
         </div>
         <img
           className="about-photo"
@@ -22,17 +21,12 @@ export default function About() {
 
       <div className="about-content">
         <div className="about-story">
-          <section aria-labelledby="our-approach-title">
-            <h2 id="our-approach-title">Finding the right match</h2>
-            <p>Every pet has a different personality and needs. Explore their profile to learn about their age, care needs and medical information shared by the shelter.</p>
-            <p>When you find a match, you can submit an adoption application or request a visit to get to know them first.</p>
-          </section>
           <section aria-labelledby="before-visit-title">
-            <h2 id="before-visit-title">Before you visit</h2>
+            <h2 id="before-visit-title">Visiting the shelter</h2>
             <ul>
-              <li>Choose a pet and request a visit from their details page.</li>
-              <li>Pick a preferred date and time.</li>
-              <li>Wait for the shelter to confirm your appointment before arriving.</li>
+              <li>Choose a pet you would like to meet.</li>
+              <li>Request a time from their details page.</li>
+              <li>Wait for the shelter to confirm your visit.</li>
             </ul>
             <Link className="text-link" to="/pets">Browse our pets</Link>
           </section>
@@ -40,7 +34,6 @@ export default function About() {
 
         <aside className="shelter-info" aria-labelledby="shelter-info-title">
           <h2 id="shelter-info-title">Plan your visit</h2>
-          <p className="demo-notice">Demo shelter details for this class project. Hours and contact information are examples.</p>
           <h3><Clock size={18} aria-hidden="true" /> Visiting hours</h3>
           <dl className="shelter-hours">
             {shelter.hours.map((hours) => (

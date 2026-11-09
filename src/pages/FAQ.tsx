@@ -1,6 +1,4 @@
 import { Link } from 'react-router-dom';
-import { Clock, MapPin, Mail, Phone } from 'lucide-react';
-import { shelter, formatTime } from '../data/shelter';
 
 
 export default function FAQ() {
@@ -62,42 +60,14 @@ export default function FAQ() {
 
         <hr className="FAQ-divider" />
 
-        <section className="section container" aria-labelledby="faq-title">
+        <section className="FAQ-contact" aria-labelledby="faq-title">
             <div className="page-heading">
-                <h1 id="faq-title">Other Questions?</h1>
-                <p>Visit us today or give us a call!</p>
+                <h2 id="faq-title">Other questions?</h2>
+                <p>Find our hours and contact details on the <Link className="text-link" to="/about">About us page</Link>.</p>
             </div>
         </section>
 
-        <aside className="shelter-info" aria-labelledby="shelter-info-title">
-            <h2 id="shelter-info-title">Shelter Information</h2>
-            <p className="demo-notice">Demo shelter details for this class project. Hours and contact information are examples.</p>
-            <h3><Clock size={18} aria-hidden="true" /> Visiting hours</h3>
-            <dl className="shelter-hours">
-                {shelter.hours.map((hours) => (
-                <div key={hours.days}>
-                    <dt>{hours.days}</dt>
-                    <dd>{hours.open ? `${formatTime(hours.open)} to ${formatTime(hours.close)}` : 'Closed'}</dd>
-                </div>
-                ))}
-            </dl>
-            <p className="shelter-timezone">All times are Central Time.</p>
-            <h3>Location and contact</h3>
-            <dl className="shelter-contact">
-                <div>
-                <dt><MapPin size={18} aria-hidden="true" /> Location</dt>
-                <dd>{shelter.location}</dd>
-                </div>
-                <div>
-                <dt><Mail size={18} aria-hidden="true" /> Email</dt>
-                <dd>{shelter.email}</dd>
-                </div>
-                <div>
-                <dt><Phone size={18} aria-hidden="true" /> Phone</dt>
-                <dd>{shelter.phone}</dd>
-                </div>
-            </dl>
-        </aside>
+
 
         </section>
     );

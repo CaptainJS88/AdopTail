@@ -5,9 +5,9 @@ create policy "Approved staff can read all profiles"
 
 --update: profile fields
 alter table public.profiles
-  add column phone text
+  add column if not exists phone text
     check (phone is null or phone ~ '^[0-9]{10}$'),
-  add column city text
+  add column if not exists city text
     check (city is null or char_length(btrim(city)) between 1 and 80);
 
 alter table public.profiles

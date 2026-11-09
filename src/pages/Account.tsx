@@ -110,10 +110,9 @@ export default function Account() {
             <h1 id="account-title">Your profile</h1>
           </div>
           {error && <Message kind="error">{error}</Message>}
-          <ProfileDetails key={session.user.id} />
-          <div className="account-actions">
+          <ProfileDetails key={session.user.id} accountAction={
             <button
-              className="button button-secondary button-small"
+              className="button button-small"
               type="button"
               disabled={busy}
               onClick={handleSignOut}
@@ -121,7 +120,7 @@ export default function Account() {
               <LogOut size={16} aria-hidden="true" />
               {busy ? 'Signing out...' : 'Sign out'}
             </button>
-          </div>
+          } />
         </div>
       </section>
     );

@@ -163,7 +163,7 @@ export default function ScheduleVisit() {
                 </div>
               ))}
             </dl>
-            <p className="demo-notice">Demo hours. Visits must finish before closing.</p>
+            <p className="shelter-timezone">Visits must finish before closing.</p>
           </div>
         )}
         {requestSent && <Message kind="success">Your visit request was sent to the shelter. They will confirm or suggest another time.</Message>}
