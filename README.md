@@ -32,6 +32,10 @@ You need Node.js and npm installed.
    npm run dev
    ```
 
+## Database setup
+
+Use the team’s Supabase project. Database changes are in `supabase/migrations`. The backend team should apply any pending migrations before testing applications and visits. Staff accounts need an approved staff role.
+
 ## Build
 
 ```sh

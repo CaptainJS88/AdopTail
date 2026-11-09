@@ -59,7 +59,7 @@ export default function FindPet() {
   return (
     <section className="section container" aria-labelledby="search-title">
       <div className="section-heading">
-        <h1 id="search-title">Search for a Pet</h1>
+        <h1 id="search-title">Find a pet</h1>
         <span className="sample-label">Shelter listings</span>
       </div>
       <p className="hero-description">

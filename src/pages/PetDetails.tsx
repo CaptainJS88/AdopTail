@@ -1,22 +1,27 @@
+import { formatStatus } from '../lib/status';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { useAuth } from '../auth/AuthContext';
+import { useProfile } from '../auth/ProfileContext';
 import { usePets } from '../hooks/usePets';
 import { formatAge, getMedicalRecords } from '../data/pets';
 import type { MedicalRecord } from '../data/pets';
 import Message from '../components/Message';
 import PetLoadState from '../components/PetLoadState';
+import PetPhoto from '../components/PetPhoto';
 
 export default function PetDetails() {
   const { id } = useParams();
   const { pets, loading, error } = usePets();
   const { session, loading: authLoading } = useAuth();
+  const { role, profileLoading, profileError } = useProfile();
   const pet = pets.find((item) => item.id === id);
   const [records, setRecords] = useState<MedicalRecord[]>([]);
   const [medicalLoading, setMedicalLoading] = useState(true);
   const [medicalError, setMedicalError] = useState<string | null>(null);
   const petId = pet?.id;
+  const adoptionStatus = pet?.adoptionStatus;
   const userId = session?.user.id;
 
   useEffect(() => {
@@ -24,7 +29,7 @@ export default function PetDetails() {
     setRecords([]);
     setMedicalError(null);
     setMedicalLoading(true);
-    if (!petId || !userId) return;
+    if (!petId || !userId || adoptionStatus === 'adopted') return;
 
     getMedicalRecords(petId)
       .then((data) => {
@@ -40,7 +45,7 @@ export default function PetDetails() {
     return () => {
       active = false;
     };
-  }, [petId, userId]);
+  }, [petId, userId, adoptionStatus]);
 
   if (loading || error)
     return (
@@ -71,12 +76,13 @@ export default function PetDetails() {
         </Link>
         <div className={pet.photoUrl ? 'pet-detail-layout' : 'pet-detail-layout no-photo'}>
           {pet.photoUrl && (
-            <img
+            <PetPhoto
+              petId={pet.id}
               className="pet-detail-photo"
               src={pet.photoUrl}
               alt={`${pet.name}, ${pet.breed || pet.species}`}
-              width="900"
-              height="600"
+              width={900}
+              height={600}
             />
           )}
           <div className="pet-detail-content">
@@ -84,21 +90,21 @@ export default function PetDetails() {
               <div>
                 <h1 id="pet-title">{pet.name}</h1>
               </div>
-              <span className={`status-badge status-${pet.adoptionStatus}`}>
-                {pet.adoptionStatus}
+              <span className={`pet-availability availability-${formatStatus(pet.adoptionStatus)}`}>
+                {formatStatus(pet.adoptionStatus)}
               </span>
             </div>
             <dl className="pet-facts">
               <div>
-                <dt>Species</dt>
+                <dt>Species:</dt>
                 <dd>{pet.species}</dd>
               </div>
               <div>
-                <dt>Breed</dt>
+                <dt>Breed:</dt>
                 <dd>{pet.breed || 'Not listed'}</dd>
               </div>
               <div>
-                <dt>Age</dt>
+                <dt>Age:</dt>
                 <dd>{formatAge(pet.ageMonths) || 'Not listed'}</dd>
               </div>
             </dl>
@@ -108,6 +114,7 @@ export default function PetDetails() {
                 {pet.description.trim() || 'A description has not been added yet.'}
               </p>
             </div>
+            {pet.adoptionStatus !== 'adopted' && <>
             <div className="pet-section">
               <h2>Care needs</h2>
               <p>
@@ -149,23 +156,26 @@ export default function PetDetails() {
                         <h3>{record.summary}</h3>
                         <dl className="medical-fields">
                           <div>
-                            <dt>Type</dt>
+                            <dt>Type:</dt>
                             <dd className="record-type">{record.record_type}</dd>
                           </div>
                           <div>
-                            <dt>Date</dt>
+                            <dt>Date:</dt>
                             <dd>{new Date(`${record.record_date}T00:00:00`).toLocaleDateString(undefined, {
                               month: 'short', day: 'numeric', year: 'numeric',
                             })}</dd>
                           </div>
-                          {record.details && <div><dt>Notes</dt><dd>{record.details}</dd></div>}
+                          {record.details && <div><dt>Notes:</dt><dd>{record.details}</dd></div>}
                         </dl>
                       </article>
                     ))}
                 </>
               )}
             </div>
-            <div className="pet-section pet-detail-actions">
+            </>}
+            {pet.adoptionStatus === 'adopted' ? <div className="pet-section"><p>{pet.name} has been adopted.</p><Link className="text-link" to="/pets">Browse other pets</Link></div> : <div className="pet-section pet-detail-actions">
+              {authLoading || (session && profileLoading) ? <Message kind="loading">Checking your account...</Message> : session && profileError ? <Message kind="error">We could not check your account. Please refresh to try again.</Message> : session && role !== 'adopter' ? <Link className="text-link" to="/staff">Manage shelter requests in the staff dashboard</Link> : <>
+
               {pet.adoptionStatus === 'available' ? (
                 <Link className="button" to={`/adopt?pet=${pet.id}`}>
                   Apply for {pet.name}
@@ -184,7 +194,8 @@ export default function PetDetails() {
                   Schedule a visit
                 </Link>
               )}
-          </div>
+              </>}
+          </div>}
           </div>
         </div>
       </div>

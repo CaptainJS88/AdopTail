@@ -168,9 +168,9 @@ export default function ScheduleVisit() {
         )}
         {requestSent && <Message kind="success">Your visit request was sent to the shelter. They will confirm or suggest another time.</Message>}
         {!requestSent && !showReview && dateError && <Message kind="error">{dateError}</Message>}
-        {submitError && <Message kind="error">{submitError}</Message>}
+        {submitError && !submitError.startsWith('Phone number:') && <Message kind="error">{submitError}</Message>}
         {requestSent ? (
-          <div className="empty-state"><Link className="button button-secondary" to="/pets">Back to pets</Link></div>
+          <div className="empty-state"><Link className="button button-secondary" to="/visits">View my visits</Link></div>
         ) : showReview ? (
           <FormReview title="Review your visit request" onEdit={() => setReviewing(false)} onConfirm={handleConfirm} confirmLabel="Send visit request" busy={submitting} items={[
             { label: 'Pet', value: pet.name },

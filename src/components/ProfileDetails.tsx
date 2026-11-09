@@ -20,7 +20,7 @@ export default function ProfileDetails({ accountAction }: { accountAction: React
     <>
       <Message kind="error">{loadError}</Message>
       <div className="account-actions">
-        <button className="button button-small" type="button" onClick={reload}>Try again</button>
+        <button className="button button-small button-secondary" type="button" onClick={reload}>Try again</button>
         {accountAction}
       </div>
     </>
@@ -67,20 +67,17 @@ export default function ProfileDetails({ accountAction }: { accountAction: React
         </form>
       ) : (
         <>
-          <div className="account-details">
-            <div className="account-info">
-              <h2>Contact details</h2>
-              <dl className="account-fields">
-                <div><dt>Full name</dt><dd>{details.fullName || 'Not added'}</dd></div>
-                <div><dt>Email</dt><dd>{session.user.email}</dd></div>
-                <div><dt>Phone</dt><dd>{details.phone || 'Not added'}</dd></div>
-                <div><dt>City</dt><dd>{details.city || 'Not added'}</dd></div>
-                <div><dt>Member since</dt><dd>{new Date(session.user.created_at).toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' })}</dd></div>
-              </dl>
-            </div>
-          </div>
+          <section className="account-details" aria-labelledby="profile-contact-title">
+            <h2 id="profile-contact-title">Contact details</h2>
+            <dl className="account-fields">
+              <div><dt>Full name:</dt><dd>{details.fullName || <span className="account-missing">Not added</span>}</dd></div>
+              <div><dt>Email:</dt><dd>{session.user.email}</dd></div>
+              <div><dt>Phone:</dt><dd>{details.phone || <span className="account-missing">Not added</span>}</dd></div>
+              <div><dt>City:</dt><dd>{details.city || <span className="account-missing">Not added</span>}</dd></div>
+            </dl>
+          </section>
           <div className="account-actions">
-            <button className="button button-small" type="button" onClick={() => { setEditing(true); setSaved(false); }}>Edit profile</button>
+            <button className="button button-secondary button-small" type="button" onClick={() => { setEditing(true); setSaved(false); }}>Edit profile</button>
             {accountAction}
           </div>
         </>

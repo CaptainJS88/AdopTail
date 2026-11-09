@@ -16,8 +16,6 @@ import { requestError } from '../lib/messages';
 type ApplicationDraft = ContactDetails & {
   petId: string;
   housingType: string;
-  homeOwnership: string;
-  petPermission: string;
   household: string;
   otherPets: string;
   experience: string;
@@ -52,8 +50,7 @@ export default function AdoptPet() {
     setDraft({
       petId: pet.id,
       fullName: value('fullName'), phone: value('phone').replace(/\D/g, ''), city: value('city'),
-      housingType: value('housingType'), homeOwnership: value('homeOwnership'),
-      petPermission: value('petPermission'), household: value('household'),
+      housingType: value('housingType'), household: value('household'),
       otherPets: value('otherPets'), experience: value('experience'),
       dailyCare: value('dailyCare'), reason: value('reason'),
     });
@@ -72,8 +69,6 @@ export default function AdoptPet() {
           phone: currentDraft.phone,
           city: currentDraft.city,
           housing_type: currentDraft.housingType,
-          home_ownership: currentDraft.homeOwnership,
-          pet_permission: currentDraft.petPermission,
           household: currentDraft.household,
           other_pets: currentDraft.otherPets,
           experience: currentDraft.experience,
@@ -146,7 +141,7 @@ export default function AdoptPet() {
           <h1 id="application-title">Apply for {pet.name}</h1>
           <p>Tell the shelter about yourself and the home you can offer.</p>
         </div>
-        {submitError && <Message kind="error">{submitError}</Message>}
+        {submitError && !submitError.startsWith('Phone number:') && <Message kind="error">{submitError}</Message>}
         {reviewing && currentDraft ? (
           <FormReview title="Review your application" onEdit={() => setReviewing(false)} onConfirm={handleConfirm} confirmLabel="Submit application" busy={submitting} items={[
             { label: 'Pet', value: pet.name },
@@ -155,8 +150,6 @@ export default function AdoptPet() {
             { label: 'Phone', value: currentDraft.phone },
             { label: 'City', value: currentDraft.city },
             { label: 'Housing type', value: currentDraft.housingType },
-            { label: 'Own or rent', value: currentDraft.homeOwnership },
-            { label: 'Pets allowed', value: currentDraft.petPermission },
             { label: 'Household', value: currentDraft.household },
             { label: 'Other pets', value: currentDraft.otherPets },
             { label: 'Experience with pets', value: currentDraft.experience },
@@ -176,22 +169,9 @@ export default function AdoptPet() {
                 <div className="field">
                   <label htmlFor="housingType">Housing type <span className="required-mark" aria-hidden="true">*</span></label>
                   <select id="housingType" name="housingType" required defaultValue={currentDraft?.housingType || ''}>
-                    <option value="">Choose a housing type</option><option value = "house">House</option><option value = "apartment">Apartment</option><option value = "other">Other</option>
+                    <option value="">Choose a housing type</option><option value="House">House</option><option value="Apartment">Apartment</option><option value="Other">Other</option>
                   </select>
                 </div>
-                <div className="field">
-                  <label htmlFor="homeOwnership">Do you own or rent? <span className="required-mark" aria-hidden="true">*</span></label>
-                  <select id="homeOwnership" name="homeOwnership" required defaultValue={currentDraft?.homeOwnership || ''}>
-                    <option value="">Choose an option</option><option value="own">Own</option><option value ="rent">Rent</option><option value ="other">Other</option>
-                  </select>
-                </div>
-              </div>
-              <div className="field">
-                <label htmlFor="petPermission">Are pets allowed where you live? <span className="required-mark" aria-hidden="true">*</span></label>
-                <select id="petPermission" name="petPermission" required defaultValue={currentDraft?.petPermission || ''}>
-                  <option value="">Choose an option</option><option value="yes">Yes</option><option value = "no">No</option><option value = "need_to_check">Need to check</option>
-                </select>
-                <p className="input-hint">If you rent, check your landlord's pet policy.</p>
               </div>
               <div className="field">
                 <label htmlFor="household">Who will share the home? (optional)</label>

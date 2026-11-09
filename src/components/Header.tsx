@@ -19,7 +19,8 @@ export default function Header() {
         <nav id="main-navigation" className={menuOpen ? 'navigation open' : 'navigation'} aria-label="Main navigation">
           <NavLink to="/" end onClick={() => setMenuOpen(false)}>Home</NavLink>
           <NavLink to="/pets" onClick={() => setMenuOpen(false)}>Find a pet</NavLink>
-          {session && <NavLink to="/applications" onClick={() => setMenuOpen(false)}>My applications</NavLink>}
+          {session && role === 'adopter' && <NavLink to="/applications" onClick={() => setMenuOpen(false)}>My applications</NavLink>}
+          {session && role === 'adopter' && <NavLink to="/visits" onClick={() => setMenuOpen(false)}>My visits</NavLink>}
           {session && role === 'staff' && staffAccessApproved && <NavLink to="/staff" onClick={() => setMenuOpen(false)}>Staff dashboard</NavLink>}
           <NavLink to="/about" onClick={() => setMenuOpen(false)}>About us</NavLink>
           <NavLink to="/FAQ" onClick={() => setMenuOpen(false)}>FAQs</NavLink>

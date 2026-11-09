@@ -26,6 +26,9 @@ export function requestError(cause: unknown, fallback: string) {
     return 'This pet is not accepting visits right now. Please choose another pet.';
   if (message.includes('not currently accepting applications'))
     return 'This pet is not accepting adoption applications right now. Please choose another pet.';
+  if (message.includes('valid housing type')) return 'Please choose a housing type from the list.';
+  if (message.includes('valid ownership type')) return 'Please choose whether you own or rent your home.';
+  if (message.includes('valid pet permission')) return 'Please choose whether pets are allowed in your home.';
   if (message.includes('adoption reason'))
     return 'Please explain why you would like to adopt this pet using 1 to 2,000 characters.';
   if (message.includes('weak password') || message.includes('password should'))

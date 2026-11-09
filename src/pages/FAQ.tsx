@@ -7,42 +7,42 @@ export default function FAQ() {
             <div className="FAQ-intro">
                 <div className="FAQ-left">
                     <div className="page-heading">
-                        <h1 id="FAQ-title">Frequently Asked Questions</h1>
+                        <h1 id="FAQ-title">Frequently asked questions</h1>
                     </div>
 
                 <div className="FAQ-content FAQ-info">
                     <details>
-                        <summary><h2>Adoption Process: How it Works</h2></summary>
+                        <summary><h2>How adoption works</h2></summary>
                         <ul>
                             <li>Search for available pets on our website.</li>
                             <li>Once you've found your favorite pet, review their profile to make sure they are a good match for your family.</li>
-                            <li>Get to know your pet before you adopt--schedule a visit with the shelter.</li>
+                            <li>You can request a visit from the pet’s details page before applying.</li>
                             <li>Ready to adopt? Submit your application for the pet you want to bring home.</li>
                             <li>Wait for us to review your application.</li>
-                            <li>We'll let you know when your application is approved so you know when you can bring your new companion home!</li>
+                            <li>Check My applications for the shelter’s decision. Once approved, the shelter will arrange the next steps with you.</li>
                             <li>Have questions? Let us know!</li>
                         </ul>
                     </details>
 
                     <details>
-                        <summary><h2>Average wait time for Application Review</h2></summary>
+                        <summary><h2>How long does application review take?</h2></summary>
                         <ul>
-                            <li>Application review typically take 2-3 weeks.</li>
-                            <li>If you do not hear from us within 3 weeks, please contact us.</li>
+                            <li>Review times vary. Check My applications for the latest status.</li>
+                            <li>Contact the shelter if you have a question about your application.</li>
                         </ul>
                     </details>
 
                     <details>
-                        <summary><h2>Adoption Fees</h2></summary>
+                        <summary><h2>Adoption fees</h2></summary>
                         <ul>
-                            <li>The standard adoption fee is $50 per application.</li>
+                            <li>Contact the shelter to confirm any adoption fees.</li>
                         </ul>
                     </details>
 
                     <details>
                         <summary><h2>Do I need to have an appointment to visit a pet?</h2></summary>
                         <ul>
-                            <li>No, appointments are not required, however those who have appointments to visit a specific pet will have priority.</li>
+                            <li>Choose Schedule a visit on the pet’s details page. Wait for the shelter to confirm, then check My visits for the latest date and time.</li>
                         </ul>
                     </details>
                 </div>
