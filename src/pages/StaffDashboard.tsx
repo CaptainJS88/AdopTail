@@ -33,6 +33,12 @@ function dateTime(value: string) {
 function dateOnly(value: string) {
   return new Date(`${value}T00:00:00`).toLocaleDateString(undefined, { dateStyle: 'medium' });
 }
+function focusStaffForm(form: HTMLFormElement | null) {
+  if (!form) return;
+  form.scrollIntoView({ block: 'start' });
+  form.querySelector<HTMLElement>('input, select')?.focus({ preventScroll: true });
+}
+
 function display(value: string | null | undefined) {
   return value?.trim() || 'Not provided';
 }
@@ -382,6 +388,10 @@ function AnimalsPanel({ rows, busyKey, onRefresh, save, setHidden, setFoster }: 
 }) {
   const [editing, setEditing] = useState<AnimalRow | null>(null);
   const [adding, setAdding] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
+  useEffect(() => {
+    if (adding || editing) focusStaffForm(formRef.current);
+  }, [adding, editing]);
   const [formError, setFormError] = useState('');
   const [photoError, setPhotoError] = useState('');
   const [photoBusy, setPhotoBusy] = useState('');
@@ -485,9 +495,9 @@ function AnimalsPanel({ rows, busyKey, onRefresh, save, setHidden, setFoster }: 
   }
 
   return <div className="staff-panel">
-    <div className="staff-panel-heading"><h2 className="visually-hidden">Animal listings</h2><button className="button button-small button-secondary" type="button" onClick={() => { setAdding(true); setEditing(null); }}>Add a pet</button></div>
+    <div className="staff-panel-heading"><h2 className="visually-hidden">Animal listings</h2><button className="button button-small button-secondary" type="button" onClick={() => { setAdding(true); setEditing(null); focusStaffForm(formRef.current); }}>Add a pet</button></div>
     {formError && <Message kind="error">{formError}</Message>}{photoError && <Message kind="error">{photoError}</Message>}
-    {(adding || editing) && <form className="staff-form" onSubmit={saveAnimal}>
+    {(adding || editing) && <form ref={formRef} key={editing?.id ?? 'new'} className="staff-form" onSubmit={saveAnimal}>
       <h3>{editing ? `Edit ${editing.name}` : 'Add an animal'}</h3>
       <div className="form-grid">
         <div className="field"><label htmlFor="animal-name">Name</label><input id="animal-name" name="name" required maxLength={100} defaultValue={editing?.name ?? ''} /></div>
@@ -512,7 +522,7 @@ function AnimalsPanel({ rows, busyKey, onRefresh, save, setHidden, setFoster }: 
         <div><dt>Description:</dt><dd>{animal.description}</dd></div>
         <div><dt>Care needs:</dt><dd>{display(animal.care_needs)}</dd></div>
       </dl>
-      <div className="staff-actions"><button type="button" className="button button-secondary" onClick={() => { setEditing(animal); setAdding(false); }}>Edit listing</button><button type="button" className="button button-secondary" disabled={busyKey === `hidden-${animal.id}`} onClick={() => setHidden(animal)}>{animal.listing_visible ? 'Hide from adopters' : 'Show to adopters'}</button>{['available', 'fostered'].includes(animal.adoption_status) && <button type="button" className="button button-secondary" disabled={busyKey === `foster-${animal.id}`} onClick={() => setFoster(animal)}>{animal.adoption_status === 'fostered' ? 'Return to available' : 'Mark fostered'}</button>}</div>
+      <div className="staff-actions"><button type="button" className="button button-secondary" onClick={() => { setEditing(animal); setAdding(false); focusStaffForm(formRef.current); }}>Edit listing</button><button type="button" className="button button-secondary" disabled={busyKey === `hidden-${animal.id}`} onClick={() => setHidden(animal)}>{animal.listing_visible ? 'Hide from adopters' : 'Show to adopters'}</button>{['available', 'fostered'].includes(animal.adoption_status) && <button type="button" className="button button-secondary" disabled={busyKey === `foster-${animal.id}`} onClick={() => setFoster(animal)}>{animal.adoption_status === 'fostered' ? 'Return to available' : 'Mark fostered'}</button>}</div>
       <div className="staff-photos"><h4>Photos</h4>{animal.photos.length > 0 && <div className="staff-photo-grid">{animal.photos.map((photo) => <figure key={photo.id}><PetPhoto src={photo.photo_url} petId={animal.id} alt={photo.alt_text || `${animal.name}, shelter pet`} /><figcaption><span className="staff-photo-actions"><label className="button button-small button-secondary" htmlFor={`photo-replace-${photo.id}`}>Replace</label><input className="visually-hidden" id={`photo-replace-${photo.id}`} type="file" accept="image/jpeg,image/png,image/webp" disabled={photoBusy === photo.id} onChange={(event) => { const file = event.currentTarget.files?.[0]; if (file) void replacePhoto(animal, photo, file); event.currentTarget.value = ''; }} /><button type="button" className="text-button" disabled={photoBusy === photo.id} onClick={() => { if (window.confirm('Remove this pet photo?')) void removePhoto(photo); }}>Remove</button></span></figcaption></figure>)}</div>}<div className="staff-upload"><div className="field"><label htmlFor={`photo-upload-${animal.id}`}>Upload pet photos</label><input id={`photo-upload-${animal.id}`} type="file" accept="image/jpeg,image/png,image/webp" multiple disabled={photoBusy === animal.id} onChange={(event) => { void uploadPhotos(animal, event.target.files); event.currentTarget.value = ''; }} /><p className="input-hint">JPG, PNG, or WebP; up to 5 MB per image.</p></div></div>{photoBusy === animal.id && <p className="application-date">Uploading photo…</p>}</div>
     </article>)}</div>
   </div>;
@@ -523,6 +533,10 @@ function MedicalPanel({ rows, animals, busyKey, save }: {
 }) {
   const [editing, setEditing] = useState<MedicalRecordRow | null>(null);
   const [adding, setAdding] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
+  useEffect(() => {
+    if (adding || editing) focusStaffForm(formRef.current);
+  }, [adding, editing]);
   const [formError, setFormError] = useState('');
   async function saveRecord(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); setFormError('');
@@ -531,9 +545,9 @@ function MedicalPanel({ rows, animals, busyKey, save }: {
     try { const saved = await save(record, editing?.id ?? null); if (saved) { setEditing(null); setAdding(false); } }
     catch (cause) { setFormError(requestError(cause, 'Medical record could not be saved. Check the form and try again.')); }
   }
-  return <div className="staff-panel"><div className="staff-panel-heading"><h2 className="visually-hidden">Medical records</h2><button type="button" className="button button-small button-secondary" onClick={() => { setAdding(true); setEditing(null); }}>Add a record</button></div>
+  return <div className="staff-panel"><div className="staff-panel-heading"><h2 className="visually-hidden">Medical records</h2><button type="button" className="button button-small button-secondary" onClick={() => { setAdding(true); setEditing(null); focusStaffForm(formRef.current); }}>Add a record</button></div>
     {formError && <Message kind="error">{formError}</Message>}
-    {(adding || editing) && <form className="staff-form" onSubmit={saveRecord}><h3>{editing ? 'Edit medical record' : 'Add medical record'}</h3>
+    {(adding || editing) && <form ref={formRef} key={editing?.id ?? 'new'} className="staff-form" onSubmit={saveRecord}><h3>{editing ? 'Edit medical record' : 'Add medical record'}</h3>
       <div className="form-grid"><div className="field"><label htmlFor="record-animal">Pet</label><select id="record-animal" name="animal_id" required defaultValue={editing?.animal_id ?? ''}><option value="">Choose a pet</option>{animals.map((animal) => <option key={animal.id} value={animal.id}>{animal.name}</option>)}</select></div><div className="field"><label htmlFor="record-type">Record type</label><select id="record-type" name="record_type" required defaultValue={editing?.record_type ?? 'vaccination'}><option value="vaccination">Vaccination</option><option value="treatment">Treatment</option><option value="medication">Medication</option><option value="other">Other</option></select></div><div className="field"><label htmlFor="record-date">Record date</label><input id="record-date" name="record_date" type="date" required defaultValue={editing?.record_date ?? new Date().toISOString().slice(0, 10)} /></div><div className="field"><label htmlFor="record-summary">Summary</label><input id="record-summary" name="summary" required maxLength={300} defaultValue={editing?.summary ?? ''} /></div></div>
       <div className="field"><label htmlFor="record-details">Details</label><textarea id="record-details" name="details" rows={4} maxLength={4000} defaultValue={editing?.details ?? ''} /></div><label className="staff-checkbox"><input type="checkbox" name="adopter_visible" defaultChecked={editing?.adopter_visible ?? false} /> Share this medical record with signed-in adopters</label>
       <div className="staff-actions"><button type="submit" className="button" disabled={busyKey.startsWith('medical-')}>{busyKey.startsWith('medical-') ? 'Saving…' : 'Save record'}</button><button type="button" className="button button-secondary" onClick={() => { setEditing(null); setAdding(false); }}>Cancel</button></div>
@@ -554,7 +568,7 @@ function MedicalPanel({ rows, animals, busyKey, save }: {
           {row.details && <div><dt>Notes:</dt><dd>{row.details}</dd></div>}
         </dl>
         <div className="staff-actions">
-          <button type="button" className="button button-secondary" onClick={() => { setEditing(row); setAdding(false); }}>Edit record</button>
+          <button type="button" className="button button-secondary" onClick={() => { setEditing(row); setAdding(false); focusStaffForm(formRef.current); }}>Edit record</button>
         </div>
       </article>
     ))}</div>

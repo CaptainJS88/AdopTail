@@ -24,7 +24,7 @@ create temporary table staff_dashboard_test_ids (
   visit_two uuid,
   visit_slot timestamptz
 );
-insert into staff_dashboard_test_ids (visit_slot) values (date_trunc('hour', now()) + interval '2 days');
+insert into staff_dashboard_test_ids (visit_slot) values ((date_trunc('week', now() at time zone 'America/Chicago') + interval '14 days 10 hours') at time zone 'America/Chicago');
 
 select has_column('public', 'adoption_applications', 'contact_name', 'application snapshots include the applicant name');
 select has_column('public', 'adoption_applications', 'daily_care', 'application snapshots include the care plan');

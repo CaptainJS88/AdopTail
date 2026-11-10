@@ -20,6 +20,8 @@ export function requestError(cause: unknown, fallback: string) {
     return 'Your session has expired. Please sign in again and retry.';
   if (message.includes('overlaps') || message.includes('time conflict'))
     return 'This visit time is no longer available. Please choose another time.';
+  if (message.includes('shelter opening hours') || message.includes('outside visiting hours'))
+    return 'Choose a 30-minute visit during opening hours: Monday to Friday, 10 AM to 6 PM, or Saturday, 10 AM to 4 PM. The shelter is closed on Sundays.';
   if (message.includes('must be in the future'))
     return 'This time has already passed. Please choose a later date or time.';
   if (message.includes('not accepting visit') || message.includes('not available for a visit'))
