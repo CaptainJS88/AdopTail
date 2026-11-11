@@ -5,3 +5,5 @@ dist/
 !.env.example
 supabase/.temp/
 .DS_Store
+playwright-report/
+test-results/

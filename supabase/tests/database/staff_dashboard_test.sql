@@ -18,6 +18,7 @@ values
   ('82000000-0000-4000-8000-000000000003', 'Dashboard Test Pet Three', 'dog', 'Test listing three', '');
 
 create temporary table staff_dashboard_test_ids (
+  id integer primary key default 1,
   app_one uuid,
   app_two uuid,
   visit_one uuid,
@@ -55,7 +56,7 @@ reset role;
 update staff_dashboard_test_ids set app_one = public.submit_adoption_application(
   '82000000-0000-4000-8000-000000000001',
   '{"full_name":"Test Adopter","phone":"2145550100","city":"Arlington","housing_type":"Apartment","home_ownership":"Rent","pet_permission":"Yes","household":"Two adults","other_pets":"None","experience":"First-time owner","daily_care":"Daily walks","reason":"Ready to provide a loving home"}'::jsonb
-);
+) where id = 1;
 select is((select contact_name from public.adoption_applications where id = (select app_one from staff_dashboard_test_ids)), 'Test Adopter', 'application saves the contact name snapshot');
 select is((select contact_email from public.adoption_applications where id = (select app_one from staff_dashboard_test_ids)), 'staff-dashboard-adopter@example.test', 'application email comes from the signed-in Auth user');
 select throws_ok(
@@ -68,15 +69,15 @@ select set_config('request.jwt.claims', '{"sub":"81000000-0000-4000-8000-0000000
 update staff_dashboard_test_ids set app_two = public.submit_adoption_application(
   '82000000-0000-4000-8000-000000000003',
   '{"full_name":"Second Adopter","phone":"2145550101","city":"Dallas","housing_type":"House","home_ownership":"Own","pet_permission":"Yes","other_pets":"None","daily_care":"Daily walks","reason":"Ready to provide a loving home"}'::jsonb
-);
+) where id = 1;
 
 set local role authenticated;
-select is((select count(*) from public.adoption_applications), 1::bigint, 'adopter only sees their own applications');
+select is((select count(*) from public.adoption_applications where animal_id in ('82000000-0000-4000-8000-000000000001', '82000000-0000-4000-8000-000000000003')), 1::bigint, 'adopter only sees their own applications');
 reset role;
 select set_config('request.jwt.claim.sub', '81000000-0000-4000-8000-000000000003', true);
 select set_config('request.jwt.claims', '{"sub":"81000000-0000-4000-8000-000000000003","role":"authenticated","email":"staff-dashboard-staff@example.test"}', true);
 set local role authenticated;
-select is((select count(*) from public.adoption_applications), 2::bigint, 'approved staff sees all applications');
+select is((select count(*) from public.adoption_applications where animal_id in ('82000000-0000-4000-8000-000000000001', '82000000-0000-4000-8000-000000000003')), 2::bigint, 'approved staff sees all applications');
 reset role;
 
 select set_config('request.jwt.claim.sub', '81000000-0000-4000-8000-000000000001', true);
@@ -99,11 +100,12 @@ select lives_ok(
 select is((select status from public.adoption_applications where id = (select app_one from staff_dashboard_test_ids)), 'approved', 'application status is updated');
 select is((select adoption_status from public.animals where id = '82000000-0000-4000-8000-000000000001'), 'pending', 'approval moves the pet to pending');
 select lives_ok(
-  format('select public.decide_adoption_application(%L::uuid, %L)', (select app_two from staff_dashboard_test_ids), 'rejected'),
+  format('select public.decide_adoption_application(%L::uuid, %L, %L)', (select app_two from staff_dashboard_test_ids), 'rejected', 'This pet needs a different daily care plan.'),
   'staff can reject a submitted application'
 );
 select is((select status from public.adoption_applications where id = (select app_two from staff_dashboard_test_ids)), 'rejected', 'rejection is saved on the application');
 select is((select adoption_status from public.animals where id = '82000000-0000-4000-8000-000000000003'), 'available', 'rejecting an application leaves the pet available');
+select is((select rejection_reason from public.adoption_applications where id = (select app_two from staff_dashboard_test_ids)), 'This pet needs a different daily care plan.', 'application rejection saves the staff reason');
 select lives_ok(format('select public.complete_adoption(%L::uuid)', (select app_one from staff_dashboard_test_ids)), 'staff can complete an approved adoption');
 select is((select adoption_status from public.animals where id = '82000000-0000-4000-8000-000000000001'), 'adopted', 'completed adoption marks the pet adopted');
 select is((select count(*) from public.adoptions where application_id = (select app_one from staff_dashboard_test_ids)), 1::bigint, 'completed adoption is recorded once');
@@ -119,7 +121,7 @@ update staff_dashboard_test_ids set visit_one = public.submit_appointment_reques
   '82000000-0000-4000-8000-000000000002',
   visit_slot,
   '{"full_name":"Test Adopter","phone":"2145550100","note":"Can I meet this pet?"}'::jsonb
-), visit_slot = visit_slot;
+) where id = 1;
 select is((select contact_name from public.appointments where id = (select visit_one from staff_dashboard_test_ids)), 'Test Adopter', 'visit saves requester contact details');
 select is((select visit_note from public.appointments where id = (select visit_one from staff_dashboard_test_ids)), 'Can I meet this pet?', 'visit saves the optional question');
 
@@ -129,15 +131,15 @@ update staff_dashboard_test_ids set visit_two = public.submit_appointment_reques
   '82000000-0000-4000-8000-000000000002',
   visit_slot,
   '{"full_name":"Second Adopter","phone":"2145550101","note":""}'::jsonb
-), visit_slot = visit_slot;
+) where id = 1;
 
 set local role authenticated;
-select is((select count(*) from public.appointments), 1::bigint, 'adopter only sees their own visit requests');
+select is((select count(*) from public.appointments where animal_id = '82000000-0000-4000-8000-000000000002'), 1::bigint, 'adopter only sees their own visit requests');
 reset role;
 select set_config('request.jwt.claim.sub', '81000000-0000-4000-8000-000000000003', true);
 select set_config('request.jwt.claims', '{"sub":"81000000-0000-4000-8000-000000000003","role":"authenticated","email":"staff-dashboard-staff@example.test"}', true);
 set local role authenticated;
-select is((select count(*) from public.appointments), 2::bigint, 'approved staff sees all visit requests');
+select is((select count(*) from public.appointments where animal_id = '82000000-0000-4000-8000-000000000002'), 2::bigint, 'approved staff sees all visit requests');
 reset role;
 
 select set_config('request.jwt.claim.sub', '81000000-0000-4000-8000-000000000001', true);
@@ -161,10 +163,12 @@ select is((select starts_at from public.appointments where id = (select visit_on
 
 select set_config('request.jwt.claim.sub', '81000000-0000-4000-8000-000000000001', true);
 select set_config('request.jwt.claims', '{"sub":"81000000-0000-4000-8000-000000000001","role":"authenticated","email":"staff-dashboard-adopter@example.test"}', true);
+set local role authenticated;
 select throws_ok(
   $$insert into public.medical_records (animal_id, record_type, record_date, summary, recorded_by) values ('82000000-0000-4000-8000-000000000002', 'vaccination', current_date, 'Unauthorized write', '81000000-0000-4000-8000-000000000001')$$,
   '42501', 'new row violates row-level security policy for table "medical_records"', 'adopter cannot add medical records'
 );
+reset role;
 
 select set_config('request.jwt.claim.sub', '81000000-0000-4000-8000-000000000003', true);
 select set_config('request.jwt.claims', '{"sub":"81000000-0000-4000-8000-000000000003","role":"authenticated","email":"staff-dashboard-staff@example.test"}', true);
@@ -174,7 +178,7 @@ reset role;
 select set_config('request.jwt.claim.sub', '81000000-0000-4000-8000-000000000001', true);
 select set_config('request.jwt.claims', '{"sub":"81000000-0000-4000-8000-000000000001","role":"authenticated","email":"staff-dashboard-adopter@example.test"}', true);
 set local role authenticated;
-select is((select count(*) from public.medical_records), 0::bigint, 'adopters cannot read staff-only medical records');
+select is((select count(*) from public.medical_records where animal_id = '82000000-0000-4000-8000-000000000002'), 0::bigint, 'adopters cannot read staff-only medical records');
 reset role;
 
 select * from finish();
