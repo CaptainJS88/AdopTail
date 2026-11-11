@@ -5,9 +5,9 @@ create policy "Approved staff can read all profiles"
 
 --update: profile fields
 alter table public.profiles
-  add column phone text
+  add column if not exists phone text
     check (phone is null or phone ~ '^[0-9]{10}$'),
-  add column city text
+  add column if not exists city text
     check (city is null or char_length(btrim(city)) between 1 and 80);
 
 alter table public.profiles
@@ -38,7 +38,7 @@ alter table public.appointments
   add column notes text
     check (notes is null or char_length(notes) <= 1000);
 
---update: visiting hours --> booking page 
+--update: visiting hours --> booking page
 --closed: sunday
 -- 10-6 m-f
 -- 10-4 saturday
@@ -53,15 +53,15 @@ as $$
     extract(second from t) = 0
     and extract(minute from t) in (0, 30)
     and case extract(isodow from t)
-          when 7 then false                                              
-          when 6 then t::time between time '10:00' and time '15:30'      
-          else        t::time between time '10:00' and time '17:30'      
+          when 7 then false
+          when 6 then t::time between time '10:00' and time '15:30'
+          else        t::time between time '10:00' and time '17:30'
         end
   from lt
 $$;
 
 
--- changes to keep integrety of old data/ structure 
+-- changes to keep integrety of old data/ structure
 drop function if exists public.submit_adoption_application(uuid, text);
 drop function if exists public.submit_adoption_application(uuid, text, text, text);
 drop function if exists public.submit_appointment_request(uuid, timestamptz);
@@ -96,8 +96,8 @@ begin
   ) then
     raise exception 'An adopter account is required' using errcode = '42501';
   end if;
-  
-  
+
+
   if p_full_name is null or char_length(btrim(p_full_name)) not between 1 and 100 then
     raise exception 'Full name is required (up to 100 characters)';
   end if;

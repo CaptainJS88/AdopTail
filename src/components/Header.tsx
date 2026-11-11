@@ -1,11 +1,13 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { useAuth } from '../auth/AuthContext';
+import { useProfile } from '../auth/ProfileContext';
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const { session } = useAuth();
+  const { role, staffAccessApproved } = useProfile();
 
   return (
     <header className="site-header">
@@ -15,14 +17,16 @@ export default function Header() {
           {menuOpen ? <X /> : <Menu />}
         </button>
         <nav id="main-navigation" className={menuOpen ? 'navigation open' : 'navigation'} aria-label="Main navigation">
-          <Link to="/pets" onClick={() => setMenuOpen(false)}>Find a pet</Link>
-          <Link to="/#how-it-works" onClick={() => setMenuOpen(false)}>How adoption works</Link>
-          <Link to="/about" onClick={() => setMenuOpen(false)}>About us</Link>
-          {session && <Link to="/applications" onClick={() => setMenuOpen(false)}>My applications</Link>}
-          <Link to="/account" onClick={() => setMenuOpen(false)}>
+          <NavLink to="/" end onClick={() => setMenuOpen(false)}>Home</NavLink>
+          <NavLink to="/pets" onClick={() => setMenuOpen(false)}>Find a pet</NavLink>
+          {session && role === 'adopter' && <NavLink to="/applications" onClick={() => setMenuOpen(false)}>My applications</NavLink>}
+          {session && role === 'adopter' && <NavLink to="/visits" onClick={() => setMenuOpen(false)}>My visits</NavLink>}
+          {session && role === 'staff' && staffAccessApproved && <NavLink to="/staff" onClick={() => setMenuOpen(false)}>Staff dashboard</NavLink>}
+          <NavLink to="/about" onClick={() => setMenuOpen(false)}>About us</NavLink>
+          <NavLink to="/FAQ" onClick={() => setMenuOpen(false)}>FAQs</NavLink>
+          <NavLink to="/account" onClick={() => setMenuOpen(false)}>
             {session ? 'My account' : 'Sign in'}
-          </Link>
-          <Link to="/FAQ" onClick={() => setMenuOpen(false)}>FAQs</Link>
+          </NavLink>
         </nav>
       </div>
     </header>

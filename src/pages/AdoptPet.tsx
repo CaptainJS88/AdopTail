@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import PetLoadState from '../components/PetLoadState';
 import { useAuth } from '../auth/AuthContext';
 import { usePets } from '../hooks/usePets';
@@ -10,12 +10,12 @@ import { useProfile } from '../auth/ProfileContext';
 import type { ContactDetails } from '../auth/ProfileContext';
 import ContactFields from '../components/ContactFields';
 import FormReview from '../components/FormReview';
+import { supabase } from '../lib/supabase';
+import { requestError } from '../lib/messages';
 
 type ApplicationDraft = ContactDetails & {
   petId: string;
   housingType: string;
-  homeOwnership: string;
-  petPermission: string;
   household: string;
   otherPets: string;
   experience: string;
@@ -27,11 +27,14 @@ export default function AdoptPet() {
   const [searchParams] = useSearchParams();
   const { session, loading: authLoading } = useAuth();
   const { details } = useProfile();
+  const navigate = useNavigate();
   const { pets, loading, error } = usePets();
   const [submitError, setSubmitError] = useState('');
   const [draft, setDraft] = useState<ApplicationDraft | null>(null);
   const [reviewing, setReviewing] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const pet = pets.find((item) => item.id === searchParams.get('pet'));
+  const currentDraft = draft?.petId === pet?.id ? draft : null;
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -47,12 +50,38 @@ export default function AdoptPet() {
     setDraft({
       petId: pet.id,
       fullName: value('fullName'), phone: value('phone').replace(/\D/g, ''), city: value('city'),
-      housingType: value('housingType'), homeOwnership: value('homeOwnership'),
-      petPermission: value('petPermission'), household: value('household'),
+      housingType: value('housingType'), household: value('household'),
       otherPets: value('otherPets'), experience: value('experience'),
       dailyCare: value('dailyCare'), reason: value('reason'),
     });
     setReviewing(true);
+  }
+
+  async function handleConfirm() {
+    if (!pet || !session || !currentDraft || submitting) return;
+    setSubmitting(true);
+    setSubmitError('');
+    try {
+      const { error: submitErrorResult } = await supabase.rpc('submit_adoption_application', {
+        p_animal_id: pet.id,
+        p_application_data: {
+          full_name: currentDraft.fullName,
+          phone: currentDraft.phone,
+          city: currentDraft.city,
+          housing_type: currentDraft.housingType,
+          household: currentDraft.household,
+          other_pets: currentDraft.otherPets,
+          experience: currentDraft.experience,
+          daily_care: currentDraft.dailyCare,
+          reason: currentDraft.reason,
+        },
+      });
+      if (submitErrorResult) throw submitErrorResult;
+      navigate('/applications');
+    } catch (cause) {
+      setSubmitError(requestError(cause, 'Your application could not be submitted. Please review it and try again.'));
+      setSubmitting(false);
+    }
   }
 
   if (loading || error)
@@ -105,8 +134,6 @@ export default function AdoptPet() {
   if (pet.adoptionStatus !== 'available')
     return <section className="section container"><Message>{pet.name} is not accepting adoption applications right now.</Message><Link className="text-link" to={`/pets/${pet.id}`}>Back to pet details</Link></section>;
 
-  const currentDraft = draft?.petId === pet.id ? draft : null;
-
   return (
     <section className="section container" aria-labelledby="application-title">
       <div className="page-content">
@@ -116,15 +143,13 @@ export default function AdoptPet() {
         </div>
         {submitError && !submitError.startsWith('Phone number:') && <Message kind="error">{submitError}</Message>}
         {reviewing && currentDraft ? (
-          <FormReview title="Review your application" onEdit={() => setReviewing(false)} items={[
+          <FormReview title="Review your application" onEdit={() => setReviewing(false)} onConfirm={handleConfirm} confirmLabel="Submit application" busy={submitting} items={[
             { label: 'Pet', value: pet.name },
             { label: 'Full name', value: currentDraft.fullName },
             { label: 'Email', value: session.user.email || '' },
             { label: 'Phone', value: currentDraft.phone },
             { label: 'City', value: currentDraft.city },
             { label: 'Housing type', value: currentDraft.housingType },
-            { label: 'Own or rent', value: currentDraft.homeOwnership },
-            { label: 'Pets allowed', value: currentDraft.petPermission },
             { label: 'Household', value: currentDraft.household },
             { label: 'Other pets', value: currentDraft.otherPets },
             { label: 'Experience with pets', value: currentDraft.experience },
@@ -144,22 +169,9 @@ export default function AdoptPet() {
                 <div className="field">
                   <label htmlFor="housingType">Housing type <span className="required-mark" aria-hidden="true">*</span></label>
                   <select id="housingType" name="housingType" required defaultValue={currentDraft?.housingType || ''}>
-                    <option value="">Choose a housing type</option><option value = "house">House</option><option value = "apartment">Apartment</option><option value = "other">Other</option>
+                    <option value="">Choose a housing type</option><option value="House">House</option><option value="Apartment">Apartment</option><option value="Other">Other</option>
                   </select>
                 </div>
-                <div className="field">
-                  <label htmlFor="homeOwnership">Do you own or rent? <span className="required-mark" aria-hidden="true">*</span></label>
-                  <select id="homeOwnership" name="homeOwnership" required defaultValue={currentDraft?.homeOwnership || ''}>
-                    <option value="">Choose an option</option><option value="own">Own</option><option value ="rent">Rent</option><option value ="other">Other</option>
-                  </select>
-                </div>
-              </div>
-              <div className="field">
-                <label htmlFor="petPermission">Are pets allowed where you live? <span className="required-mark" aria-hidden="true">*</span></label>
-                <select id="petPermission" name="petPermission" required defaultValue={currentDraft?.petPermission || ''}>
-                  <option value="">Choose an option</option><option value="yes">Yes</option><option value = "no">No</option><option value = "need_to_check">Need to check</option>
-                </select>
-                <p className="input-hint">If you rent, check your landlord's pet policy.</p>
               </div>
               <div className="field">
                 <label htmlFor="household">Who will share the home? (optional)</label>

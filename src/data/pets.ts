@@ -23,6 +23,7 @@ type AnimalRow = {
   description: string;
   care_needs: string;
   adoption_status: string;
+  animal_photos?: { photo_url: string; display_order: number; storage_path: string | null }[] | null;
 };
 
 export function formatAge(ageMonths: number | null) {
@@ -36,6 +37,7 @@ export function formatAge(ageMonths: number | null) {
 }
 
 function mapAnimal(row: AnimalRow): Pet {
+  const firstPhoto = row.animal_photos?.slice().sort((a, b) => a.display_order - b.display_order)[0];
   const details = [row.breed || row.species, formatAge(row.age_months)]
     .filter(Boolean)
     .join(' / ');
@@ -50,7 +52,7 @@ function mapAnimal(row: AnimalRow): Pet {
     careNeeds: row.care_needs,
     adoptionStatus: row.adoption_status,
     details,
-    photoUrl: petPhotos[row.id] ?? null,
+    photoUrl: firstPhoto?.storage_path ? firstPhoto.photo_url : petPhotos[row.id] || firstPhoto?.photo_url || null,
   };
 }
 
@@ -58,7 +60,7 @@ export async function getPets(): Promise<Pet[]> {
   const { data, error } = await supabase
     .from('animals')
     .select(
-      'id, name, species, breed, age_months, description, care_needs, adoption_status',
+      'id, name, species, breed, age_months, description, care_needs, adoption_status, animal_photos(photo_url, display_order, storage_path)',
     )
     .eq('listing_visible', true)
     .order('name');

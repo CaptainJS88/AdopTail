@@ -3,7 +3,6 @@ import type { FormEvent } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../auth/AuthContext';
-import { LogOut } from 'lucide-react';
 import ProfileDetails from '../components/ProfileDetails';
 import Message from '../components/Message';
 import { requestError } from '../lib/messages';
@@ -105,23 +104,21 @@ export default function Account() {
   if (session) {
     return (
       <section className="section container" aria-labelledby="account-title">
-        <div className="page-content">
+        <div className="page-content profile-content">
           <div className="page-heading">
             <h1 id="account-title">Your profile</h1>
           </div>
           {error && <Message kind="error">{error}</Message>}
-          <ProfileDetails key={session.user.id} />
-          <div className="account-actions">
+          <ProfileDetails key={session.user.id} accountAction={
             <button
-              className="button button-secondary button-small"
+              className="text-button"
               type="button"
               disabled={busy}
               onClick={handleSignOut}
             >
-              <LogOut size={16} aria-hidden="true" />
               {busy ? 'Signing out...' : 'Sign out'}
             </button>
-          </div>
+          } />
         </div>
       </section>
     );
