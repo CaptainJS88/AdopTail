@@ -59,6 +59,7 @@ export type MockCalls = {
   adoptionApplication: WorkflowPayload | null;
   appointmentRequest: WorkflowPayload | null;
   applicationDecision: WorkflowPayload | null;
+  completedAdoption: WorkflowPayload | null;
 };
 
 const adopterId = '10000000-0000-4000-8000-000000000001';
@@ -81,9 +82,11 @@ export async function mockSupabase(
     adoptionApplication: null,
     appointmentRequest: null,
     applicationDecision: null,
+    completedAdoption: null,
   };
   let adoptionSubmitted = false;
   let staffApplicationStatus = 'submitted';
+  let adoptionCompleted = false;
 
   if (role !== 'anonymous') {
     const isStaff = role === 'staff';
@@ -144,8 +147,30 @@ export async function mockSupabase(
       return json(route, null);
     }
 
+    if (pathname.endsWith('/rpc/complete_adoption')) {
+      calls.completedAdoption = request.postDataJSON() as WorkflowPayload;
+      adoptionCompleted = true;
+      return json(route, null);
+    }
+
     const table = pathname.split('/').pop();
-    if (table === 'animals') return json(route, pets);
+    if (table === 'animals') return json(route, pets.map(pet => ({
+      ...pet,
+      adoption_status: adoptionCompleted && pet.id === pets[0].id ? 'adopted' : pet.adoption_status,
+    })));
+    if (table === 'adoptions') return json(route, adoptionCompleted ? [{
+      id: '40000000-0000-4000-8000-000000000001',
+      application_id: applicationId,
+      animal_id: pets[0].id,
+      adopter_id: adopterId,
+      adopted_at: '2026-11-16T15:00:00.000Z',
+      animal: { name: 'Maple' },
+      application: {
+        contact_name: 'Taylor Adopter',
+        contact_email: 'adopter@example.test',
+        contact_phone: '8175550100',
+      },
+    }] : []);
     if (table === 'profiles') {
       if (searchParams.has('id') && searchParams.get('id')?.startsWith('in.')) {
         return json(route, [{ id: adopterId, display_name: 'Taylor Adopter', phone: '8175550100', city: 'Arlington' }]);
@@ -168,7 +193,7 @@ export async function mockSupabase(
         },
       ] : []);
     }
-    if (table === 'appointments' || table === 'adoptions' || table === 'animal_photos') {
+    if (table === 'appointments' || table === 'animal_photos') {
       return json(route, []);
     }
     if (table === 'adoption_applications') {

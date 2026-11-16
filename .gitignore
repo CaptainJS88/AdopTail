@@ -7,3 +7,4 @@ supabase/.temp/
 .DS_Store
 playwright-report/
 test-results/
+DEMO_ACCESS.txt

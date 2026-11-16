@@ -134,3 +134,44 @@ test('approved staff can approve a submitted application', async ({ page }) => {
     p_rejection_reason: null,
   });
 });
+
+test('only confirmed handovers appear in completed adoptions', async ({ page }) => {
+  page.on('dialog', dialog => dialog.accept());
+  const calls = await mockSupabase(page, 'staff');
+  await page.goto('/staff');
+  await page.getByRole('button', { name: 'Completed adoptions', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'No completed adoptions yet' })).toBeVisible();
+
+  await page.getByRole('button', { name: 'Applications', exact: true }).click();
+  await expect(page.getByText('Submitted', { exact: true })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Record completed adoption' })).toHaveCount(0);
+
+  await page.getByRole('button', { name: 'Approve application', exact: true }).click();
+  await expect(page.getByText('Application approved.')).toBeVisible();
+  await page.getByRole('button', { name: 'Completed adoptions', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'No completed adoptions yet' })).toBeVisible();
+
+  await page.getByRole('button', { name: 'Applications', exact: true }).click();
+  await page.getByRole('button', { name: 'Record completed adoption' }).click();
+  await expect(page.getByRole('heading', { name: 'Complete this adoption?' })).toBeVisible();
+  expect(calls.completedAdoption).toBeNull();
+  await page.getByRole('button', { name: 'Cancel', exact: true }).click();
+  expect(calls.completedAdoption).toBeNull();
+
+  await page.getByRole('button', { name: 'Record completed adoption' }).click();
+  await page.getByRole('button', { name: 'Confirm completed adoption' }).click();
+  await expect(page.getByText('Adoption recorded and pet marked adopted.')).toBeVisible();
+  expect(calls.completedAdoption).toEqual({
+    p_application_id: '20000000-0000-4000-8000-000000000001',
+  });
+
+  await page.reload();
+  await page.getByRole('button', { name: 'Completed adoptions', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Maple', exact: true })).toBeVisible();
+  await expect(page.getByText('Taylor Adopter', { exact: true })).toBeVisible();
+  await expect(page.getByText('adopter@example.test', { exact: true })).toBeVisible();
+
+  await page.goto(`/pets/${pets[0].id}`);
+  await expect(page.getByText('Maple has been adopted.')).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Apply for Maple' })).toHaveCount(0);
+});
