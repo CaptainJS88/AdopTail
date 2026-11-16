@@ -32,7 +32,9 @@ An animal shelter and adoption management website built with React, TypeScript, 
 
 ## Using the website
 
-Sign in through **My account** using the adopter or approved staff account supplied with the submission.
+Demo account details and Supabase configuration are provided in `DEMO_ACCESS.txt` with the private submission.
+
+Sign in through **My account** using the adopter or approved staff account.
 
 - Adopters can search pets, view details, update their profile, submit applications and request visits.
 - **My applications** and **My visits** show saved decisions, rejection reasons and confirmed times.
